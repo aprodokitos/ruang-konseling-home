@@ -34,14 +34,14 @@ const counselors = [
 function Index() {
 
   return (
-    <Shell nav={["Beranda", "Jadwal", "Daftar", "Status", "Profil"]}>
+    <Shell nav={[{ label: "Beranda", to: "/" }, { label: "Jadwal", to: "/jadwal" }, { label: "Daftar" }, { label: "Status" }, { label: "Profil" }]}>
       <section className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-16 md:grid-cols-2">
         <div>
           <p className="text-sm font-medium text-primary">E-Counseling Fakultas Kedokteran</p>
           <h1 className="mt-4 text-5xl leading-[1.05] md:text-6xl">Ruang aman untuk <em className="text-primary">bercerita</em> dan pulih.</h1>
           <p className="mt-5 max-w-md text-muted-foreground">Ajukan sesi konseling tatap muka dengan dosen atau psikolog. Rahasia, terjadwal, dan tanpa ribet.</p>
           <div className="mt-8 flex gap-3">
-            <button className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20">Ajukan Konseling</button>
+            <Link to="/jadwal" className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20">Ajukan Konseling</Link>
             <Link to="/jadwal" className="rounded-full border px-6 py-3 text-sm font-semibold">Lihat Jadwal</Link>
           </div>
           <p className="mt-6 flex items-center gap-2 text-xs text-muted-foreground"><ShieldCheck className="h-4 w-4 text-primary" /> Masuk dengan email kampus via Google</p>
