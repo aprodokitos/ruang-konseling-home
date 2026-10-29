@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Send, Leaf, CalendarDays, ClipboardCheck, Clock, ShieldCheck } from "lucide-react";
 import hero from "@/assets/hero.jpg";
@@ -42,7 +42,7 @@ function Index() {
           <p className="mt-5 max-w-md text-muted-foreground">Ajukan sesi konseling tatap muka dengan dosen atau psikolog. Rahasia, terjadwal, dan tanpa ribet.</p>
           <div className="mt-8 flex gap-3">
             <button className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20">Ajukan Konseling</button>
-            <button className="rounded-full border px-6 py-3 text-sm font-semibold">Lihat Jadwal</button>
+            <Link to="/jadwal" className="rounded-full border px-6 py-3 text-sm font-semibold">Lihat Jadwal</Link>
           </div>
           <p className="mt-6 flex items-center gap-2 text-xs text-muted-foreground"><ShieldCheck className="h-4 w-4 text-primary" /> Masuk dengan email kampus via Google</p>
         </div>

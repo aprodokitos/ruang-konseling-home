@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as JadwalRouteImport } from './routes/jadwal'
 import { Route as KonselorRouteImport } from './routes/konselor'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +24,11 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JadwalRoute = JadwalRouteImport.update({
+  id: '/jadwal',
+  path: '/jadwal',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const KonselorRoute = KonselorRouteImport.update({
   id: '/konselor',
   path: '/konselor',
@@ -32,30 +38,34 @@ const KonselorRoute = KonselorRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/jadwal': typeof JadwalRoute
   '/konselor': typeof KonselorRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/jadwal': typeof JadwalRoute
   '/konselor': typeof KonselorRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/jadwal': typeof JadwalRoute
   '/konselor': typeof KonselorRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/konselor'
+  fullPaths: '/' | '/admin' | '/jadwal' | '/konselor'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/konselor'
-  id: '__root__' | '/' | '/admin' | '/konselor'
+  to: '/' | '/admin' | '/jadwal' | '/konselor'
+  id: '__root__' | '/' | '/admin' | '/jadwal' | '/konselor'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  JadwalRoute: typeof JadwalRoute
   KonselorRoute: typeof KonselorRoute
 }
 
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/jadwal': {
+      id: '/jadwal'
+      path: '/jadwal'
+      fullPath: '/jadwal'
+      preLoaderRoute: typeof JadwalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/konselor': {
       id: '/konselor'
       path: '/konselor'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  JadwalRoute: JadwalRoute,
   KonselorRoute: KonselorRoute,
 }
 export const routeTree = rootRouteImport
