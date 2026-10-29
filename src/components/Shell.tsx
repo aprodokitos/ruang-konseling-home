@@ -16,20 +16,41 @@ function Brand() {
 export function Shell({ nav, children }: { nav: string[]; children: ReactNode }) {
   const [open, setOpen] = useState(false);
 
+  const navMap: Record<string, string> = {
+    Beranda: "/",
+    Jadwal: "/jadwal",
+  };
   const navLinks = (
     <nav className="flex flex-col gap-1">
-      {nav.map((n, i) => (
-        <span
-          key={n}
-          className={`rounded-xl px-3 py-2 text-sm transition cursor-pointer ${
-            i === 0
-              ? "bg-primary/10 font-semibold text-foreground"
-              : "text-muted-foreground hover:bg-muted hover:text-foreground"
-          }`}
-        >
-          {n}
-        </span>
-      ))}
+      {nav.map((n, i) => {
+        const to = navMap[n];
+        const base = "rounded-xl px-3 py-2 text-sm transition";
+        if (!to) {
+          return (
+            <span
+              key={n}
+              className={`${base} cursor-pointer ${
+                i === 0
+                  ? "bg-primary/10 font-semibold text-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              {n}
+            </span>
+          );
+        }
+        return (
+          <Link
+            key={n}
+            to={to}
+            activeOptions={{ exact: to === "/" }}
+            activeProps={{ className: `${base} bg-primary/10 font-semibold text-foreground` }}
+            inactiveProps={{ className: `${base} text-muted-foreground hover:bg-muted hover:text-foreground` }}
+          >
+            {n}
+          </Link>
+        );
+      })}
     </nav>
   );
 
