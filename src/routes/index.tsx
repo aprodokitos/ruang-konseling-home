@@ -33,7 +33,6 @@ const counselors = [
 
 function Index() {
   const [q, setQ] = useState("");
-  const results = faqs.filter((f) => (f.q + f.a).toLowerCase().includes(q.toLowerCase()));
   return (
     <Shell nav={["Beranda", "Jadwal", "Daftar", "Status", "Profil"]}>
       <section className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-16 md:grid-cols-2">
@@ -51,23 +50,7 @@ function Index() {
       </section>
 
       <section className="mx-auto max-w-3xl px-6">
-        <div className="rounded-3xl border bg-card p-8">
-          <h2 className="text-3xl">Tanya RuangPulih</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Cari jawaban untuk pertanyaan umum sebelum mengajukan konseling.</p>
-          <div className="mt-5 flex items-center gap-3 rounded-full border bg-background px-5 py-3">
-            <Search className="h-4 w-4 text-muted-foreground" />
-            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Contoh: tertinggal materi, privasi, durasi sesi…" className="w-full bg-transparent text-sm outline-none" />
-          </div>
-          <div className="mt-5 divide-y">
-            {results.map((f) => (
-              <details key={f.q} className="group py-4">
-                <summary className="cursor-pointer list-none font-medium">{f.q}</summary>
-                <p className="mt-2 text-sm text-muted-foreground">{f.a}</p>
-              </details>
-            ))}
-            {!results.length && <p className="py-4 text-sm text-muted-foreground">Belum ada FAQ yang cocok. Pertimbangkan mengajukan konseling.</p>}
-          </div>
-        </div>
+        <FaqChat />
       </section>
 
       <section className="mx-auto mt-20 max-w-6xl px-6">
