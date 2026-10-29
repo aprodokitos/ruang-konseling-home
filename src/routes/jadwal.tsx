@@ -22,26 +22,26 @@ type Day = (typeof days)[number];
 
 const schedule: Record<Day, { name: string; role: string; slots: string[]; room: string }[]> = {
   Senin: [
-    { name: "dr. Ratna Sari, M.Pd.Ked", role: "Dosen Program Studi", slots: ["13.00", "14.00", "15.00"], room: "Ruang BK Lt.1" },
+    { name: "dr. Ratna Sari, M.Pd.Ked", role: "Dosen Program Studi", slots: ["13", "14", "15"], room: "Ruang BK Lt.1" },
   ],
   Selasa: [
-    { name: "Andika Pratama, M.Psi., Psikolog", role: "Psikolog Ahli", slots: ["09.00", "10.00", "11.00"], room: "Ruang BK Lt.2" },
+    { name: "Andika Pratama, M.Psi., Psikolog", role: "Psikolog Ahli", slots: ["09", "10", "11"], room: "Ruang BK Lt.2" },
   ],
   Rabu: [
-    { name: "dr. Ratna Sari, M.Pd.Ked", role: "Dosen Program Studi", slots: ["13.00", "15.00"], room: "Ruang BK Lt.1" },
+    { name: "dr. Ratna Sari, M.Pd.Ked", role: "Dosen Program Studi", slots: ["13", "15"], room: "Ruang BK Lt.1" },
   ],
   Kamis: [
-    { name: "Andika Pratama, M.Psi., Psikolog", role: "Psikolog Ahli", slots: ["09.00", "10.00", "11.00"], room: "Ruang BK Lt.2" },
+    { name: "Andika Pratama, M.Psi., Psikolog", role: "Psikolog Ahli", slots: ["09", "10", "11"], room: "Ruang BK Lt.2" },
   ],
   Jumat: [
-    { name: "dr. Maya Hapsari, Sp.KJ", role: "Dosen Program Studi", slots: ["10.00", "11.00", "12.00", "13.00"], room: "Ruang BK Lt.1" },
+    { name: "dr. Maya Hapsari, Sp.KJ", role: "Dosen Program Studi", slots: ["10", "11", "12", "13"], room: "Ruang BK Lt.1" },
   ],
 };
 
 const taken: Record<string, boolean> = {
-  "Senin-15.00": true,
-  "Rabu-14.00": true,
-  "Kamis-10.00": true,
+  "Senin-15": true,
+  "Rabu-14": true,
+  "Kamis-10": true,
 };
 
 function Jadwal() {
