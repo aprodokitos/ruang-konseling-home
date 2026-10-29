@@ -2,11 +2,6 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import { Leaf, Menu, X } from "lucide-react";
 
-const roles = [
-  { to: "/", label: "Mahasiswa" },
-  { to: "/konselor", label: "Konselor" },
-  { to: "/admin", label: "Admin" },
-] as const;
 
 function Brand() {
   return (
