@@ -13,30 +13,23 @@ function Brand() {
   );
 }
 
-export type NavItem = { label: string; to?: "/" | "/jadwal" | "/konselor" | "/admin" };
-
-export function Shell({ nav, children }: { nav: NavItem[]; children: ReactNode }) {
+export function Shell({ nav, children }: { nav: string[]; children: ReactNode }) {
   const [open, setOpen] = useState(false);
 
   const navLinks = (
     <nav className="flex flex-col gap-1">
-      {nav.map((item) =>
-        item.to ? (
-          <Link
-            key={item.label}
-            to={item.to}
-            activeOptions={{ exact: item.to === "/" }}
-            onClick={() => setOpen(false)}
-            className="rounded-xl px-3 py-2 text-sm transition text-muted-foreground hover:bg-muted hover:text-foreground data-[status=active]:bg-primary/10 data-[status=active]:font-semibold data-[status=active]:text-foreground"
-          >
-            {item.label}
-          </Link>
-        ) : (
-          <span key={item.label} className="rounded-xl px-3 py-2 text-sm text-muted-foreground/60">
-            {item.label}
-          </span>
-        )
-      )}
+      {nav.map((n, i) => (
+        <span
+          key={n}
+          className={`rounded-xl px-3 py-2 text-sm transition cursor-pointer ${
+            i === 0
+              ? "bg-primary/10 font-semibold text-foreground"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+          }`}
+        >
+          {n}
+        </span>
+      ))}
     </nav>
   );
 
