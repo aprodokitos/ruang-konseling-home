@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Search, CalendarDays, ClipboardCheck, Clock, ShieldCheck } from "lucide-react";
+import { Send, Leaf, CalendarDays, ClipboardCheck, Clock, ShieldCheck } from "lucide-react";
 import hero from "@/assets/hero.jpg";
 import { Shell, Badge } from "@/components/Shell";
 
@@ -32,8 +32,7 @@ const counselors = [
 ];
 
 function Index() {
-  const [q, setQ] = useState("");
-  const results = faqs.filter((f) => (f.q + f.a).toLowerCase().includes(q.toLowerCase()));
+
   return (
     <Shell nav={["Beranda", "Jadwal", "Daftar", "Status", "Profil"]}>
       <section className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-16 md:grid-cols-2">
@@ -51,23 +50,7 @@ function Index() {
       </section>
 
       <section className="mx-auto max-w-3xl px-6">
-        <div className="rounded-3xl border bg-card p-8">
-          <h2 className="text-3xl">Tanya RuangPulih</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Cari jawaban untuk pertanyaan umum sebelum mengajukan konseling.</p>
-          <div className="mt-5 flex items-center gap-3 rounded-full border bg-background px-5 py-3">
-            <Search className="h-4 w-4 text-muted-foreground" />
-            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Contoh: tertinggal materi, privasi, durasi sesi…" className="w-full bg-transparent text-sm outline-none" />
-          </div>
-          <div className="mt-5 divide-y">
-            {results.map((f) => (
-              <details key={f.q} className="group py-4">
-                <summary className="cursor-pointer list-none font-medium">{f.q}</summary>
-                <p className="mt-2 text-sm text-muted-foreground">{f.a}</p>
-              </details>
-            ))}
-            {!results.length && <p className="py-4 text-sm text-muted-foreground">Belum ada FAQ yang cocok. Pertimbangkan mengajukan konseling.</p>}
-          </div>
-        </div>
+        <FaqChat />
       </section>
 
       <section className="mx-auto mt-20 max-w-6xl px-6">
@@ -112,5 +95,66 @@ function Index() {
         </div>
       </section>
     </Shell>
+  );
+}
+
+type Msg = { from: "bot" | "me"; text: string };
+const stop = new Set(["saya", "apa", "apakah", "bagaimana", "jika", "yang", "berapa", "bisa", "dan", "di", "ke", "itu", "ini"]);
+function answer(input: string): string {
+  const words = input.toLowerCase().split(/\W+/).filter((w) => w.length > 2 && !stop.has(w));
+  let best = { score: 0, a: "" };
+  for (const f of faqs) {
+    const hay = (f.q + " " + f.a).toLowerCase();
+    const score = words.filter((w) => hay.includes(w)).length;
+    if (score > best.score) best = { score, a: f.a };
+  }
+  return best.score
+    ? best.a
+    : "Maaf, saya belum menemukan jawaban di FAQ. Untuk hal ini, sebaiknya ajukan sesi konseling dengan konselor kami.";
+}
+
+function FaqChat() {
+  const [msgs, setMsgs] = useState<Msg[]>([
+    { from: "bot", text: "Halo! Saya Tanya RuangPulih. Tanyakan hal umum seputar konseling, saya carikan jawabannya dari FAQ." },
+  ]);
+  const [text, setText] = useState("");
+  const [typing, setTyping] = useState(false);
+  const send = (t: string) => {
+    if (!t.trim() || typing) return;
+    setMsgs((m) => [...m, { from: "me", text: t }]);
+    setText("");
+    setTyping(true);
+    setTimeout(() => {
+      setMsgs((m) => [...m, { from: "bot", text: answer(t) }]);
+      setTyping(false);
+    }, 700);
+  };
+  return (
+    <div className="overflow-hidden rounded-3xl border bg-card">
+      <div className="flex items-center gap-3 border-b bg-secondary px-6 py-4">
+        <span className="grid h-10 w-10 place-items-center rounded-full bg-primary text-primary-foreground"><Leaf className="h-4 w-4" /></span>
+        <div>
+          <h2 className="text-xl">Tanya RuangPulih</h2>
+          <p className="text-xs text-muted-foreground">Jawaban diambil dari FAQ resmi · bukan pengganti konseling</p>
+        </div>
+      </div>
+      <div className="flex h-80 flex-col gap-3 overflow-y-auto p-6">
+        {msgs.map((m, i) => (
+          <div key={i} className={`max-w-[80%] text-sm leading-relaxed ${m.from === "me" ? "self-end rounded-2xl rounded-br-sm bg-primary px-4 py-2.5 text-primary-foreground" : "self-start rounded-2xl rounded-bl-sm bg-muted px-4 py-2.5"}`}>
+            {m.text}
+          </div>
+        ))}
+        {typing && <div className="self-start rounded-2xl bg-muted px-4 py-2.5 text-sm text-muted-foreground animate-pulse">Mencari jawaban…</div>}
+      </div>
+      <div className="flex flex-wrap gap-2 px-6 pb-3">
+        {faqs.map((f) => (
+          <button key={f.q} onClick={() => send(f.q)} className="rounded-full border px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted">{f.q}</button>
+        ))}
+      </div>
+      <form onSubmit={(e) => { e.preventDefault(); send(text); }} className="flex items-center gap-2 border-t p-3">
+        <input autoFocus value={text} onChange={(e) => setText(e.target.value)} placeholder="Ketik pertanyaanmu…" className="flex-1 bg-transparent px-3 text-sm outline-none" />
+        <button aria-label="Kirim" className="grid h-10 w-10 place-items-center rounded-full bg-primary text-primary-foreground"><Send className="h-4 w-4" /></button>
+      </form>
+    </div>
   );
 }
