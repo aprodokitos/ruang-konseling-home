@@ -1,12 +1,6 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import { Leaf, Menu, X } from "lucide-react";
-
-const roles = [
-  { to: "/", label: "Mahasiswa" },
-  { to: "/konselor", label: "Konselor" },
-  { to: "/admin", label: "Admin" },
-] as const;
 
 function Brand() {
   return (
@@ -20,7 +14,6 @@ function Brand() {
 }
 
 export function Shell({ nav, children }: { nav: string[]; children: ReactNode }) {
-  const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
 
   const navLinks = (
@@ -40,24 +33,6 @@ export function Shell({ nav, children }: { nav: string[]; children: ReactNode })
     </nav>
   );
 
-  const roleSwitcher = (
-    <div className="flex flex-col gap-1 rounded-2xl bg-muted p-1.5 text-sm">
-      {roles.map((r) => (
-        <Link
-          key={r.to}
-          to={r.to}
-          className={`rounded-xl px-3 py-2 transition ${
-            pathname === r.to
-              ? "bg-card font-semibold shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          {r.label}
-        </Link>
-      ))}
-    </div>
-  );
-
   return (
     <div className="min-h-screen lg:flex">
       {/* Sidebar (desktop) */}
@@ -67,13 +42,9 @@ export function Shell({ nav, children }: { nav: string[]; children: ReactNode })
           <p className="mt-6 mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">Menu</p>
           {navLinks}
         </div>
-        <div>
-          <p className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">Peran</p>
-          {roleSwitcher}
-          <p className="mt-4 px-3 text-[11px] leading-relaxed text-muted-foreground">
-            RuangPulih · Fakultas Kedokteran UPN "Veteran" Jakarta
-          </p>
-        </div>
+        <p className="px-3 text-[11px] leading-relaxed text-muted-foreground">
+          RuangPulih · Fakultas Kedokteran UPN "Veteran" Jakarta
+        </p>
       </aside>
 
       {/* Mobile top bar */}
@@ -92,10 +63,7 @@ export function Shell({ nav, children }: { nav: string[]; children: ReactNode })
       {/* Mobile drawer */}
       {open && (
         <div className="fixed inset-x-0 top-[57px] z-30 border-b bg-background px-5 py-4 lg:hidden">
-          <p className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">Menu</p>
           {navLinks}
-          <p className="mb-2 mt-4 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">Peran</p>
-          {roleSwitcher}
         </div>
       )}
 
