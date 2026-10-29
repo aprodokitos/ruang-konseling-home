@@ -1,6 +1,6 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import type { ReactNode } from "react";
-import { Leaf } from "lucide-react";
+import { useState, type ReactNode } from "react";
+import { Leaf, Menu, X } from "lucide-react";
 
 const roles = [
   { to: "/", label: "Mahasiswa" },
@@ -8,37 +8,103 @@ const roles = [
   { to: "/admin", label: "Admin" },
 ] as const;
 
+function Brand() {
+  return (
+    <Link to="/" className="flex items-center gap-2">
+      <span className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground">
+        <Leaf className="h-4 w-4" />
+      </span>
+      <span className="font-serif text-xl">RuangPulih</span>
+    </Link>
+  );
+}
+
 export function Shell({ nav, children }: { nav: string[]; children: ReactNode }) {
   const { pathname } = useLocation();
+  const [open, setOpen] = useState(false);
+
+  const navLinks = (
+    <nav className="flex flex-col gap-1">
+      {nav.map((n, i) => (
+        <span
+          key={n}
+          className={`rounded-xl px-3 py-2 text-sm transition cursor-pointer ${
+            i === 0
+              ? "bg-primary/10 font-semibold text-foreground"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+          }`}
+        >
+          {n}
+        </span>
+      ))}
+    </nav>
+  );
+
+  const roleSwitcher = (
+    <div className="flex flex-col gap-1 rounded-2xl bg-muted p-1.5 text-sm">
+      {roles.map((r) => (
+        <Link
+          key={r.to}
+          to={r.to}
+          className={`rounded-xl px-3 py-2 transition ${
+            pathname === r.to
+              ? "bg-card font-semibold shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          {r.label}
+        </Link>
+      ))}
+    </div>
+  );
+
   return (
-    <div className="min-h-screen">
-      <header className="sticky top-0 z-20 border-b bg-background/85 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center gap-6 px-6 py-4">
-          <Link to="/" className="flex items-center gap-2">
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground">
-              <Leaf className="h-4 w-4" />
-            </span>
-            <span className="font-serif text-xl">RuangPulih</span>
-          </Link>
-          <nav className="hidden gap-5 text-sm text-muted-foreground md:flex">
-            {nav.map((n, i) => (
-              <span key={n} className={i === 0 ? "font-semibold text-foreground" : "hover:text-foreground cursor-pointer"}>{n}</span>
-            ))}
-          </nav>
-          <div className="ml-auto flex rounded-full bg-muted p-1 text-xs">
-            {roles.map((r) => (
-              <Link key={r.to} to={r.to}
-                className={`rounded-full px-3 py-1.5 transition ${pathname === r.to ? "bg-card font-semibold shadow-sm" : "text-muted-foreground"}`}>
-                {r.label}
-              </Link>
-            ))}
-          </div>
+    <div className="min-h-screen lg:flex">
+      {/* Sidebar (desktop) */}
+      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col justify-between border-r bg-card/60 px-5 py-6 lg:flex">
+        <div>
+          <Brand />
+          <p className="mt-6 mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">Menu</p>
+          {navLinks}
         </div>
+        <div>
+          <p className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">Peran</p>
+          {roleSwitcher}
+          <p className="mt-4 px-3 text-[11px] leading-relaxed text-muted-foreground">
+            RuangPulih · Fakultas Kedokteran UPN "Veteran" Jakarta
+          </p>
+        </div>
+      </aside>
+
+      {/* Mobile top bar */}
+      <header className="sticky top-0 z-20 flex items-center gap-3 border-b bg-background/85 px-5 py-3 backdrop-blur lg:hidden">
+        <button
+          type="button"
+          aria-label="Buka menu"
+          onClick={() => setOpen(!open)}
+          className="grid h-9 w-9 place-items-center rounded-xl border bg-card"
+        >
+          {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+        </button>
+        <Brand />
       </header>
-      <main>{children}</main>
-      <footer className="mt-20 border-t py-8 text-center text-xs text-muted-foreground">
-        RuangPulih · Fakultas Kedokteran UPN "Veteran" Jakarta · Konseling umum, non-medis
-      </footer>
+
+      {/* Mobile drawer */}
+      {open && (
+        <div className="fixed inset-x-0 top-[57px] z-30 border-b bg-background px-5 py-4 lg:hidden">
+          <p className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">Menu</p>
+          {navLinks}
+          <p className="mb-2 mt-4 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">Peran</p>
+          {roleSwitcher}
+        </div>
+      )}
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        <main className="min-w-0">{children}</main>
+        <footer className="mt-20 border-t py-8 text-center text-xs text-muted-foreground">
+          RuangPulih · Fakultas Kedokteran UPN "Veteran" Jakarta · Konseling umum, non-medis
+        </footer>
+      </div>
     </div>
   );
 }
