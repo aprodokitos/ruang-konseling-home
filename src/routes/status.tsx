@@ -126,6 +126,16 @@ function Status() {
                         <ChevronDown className={"h-3.5 w-3.5 transition-transform " + (openRec === h.id ? "rotate-180" : "")} />
                       </button>
                     )}
+                    {h.status === "Ditolak" && h.alasan && (
+                      <button
+                        onClick={() => setOpenRec(openRec === h.id ? null : h.id)}
+                        aria-expanded={openRec === h.id}
+                        className="inline-flex items-center gap-1 rounded-full text-xs font-medium text-destructive transition hover:bg-destructive/10 px-3 py-1.5"
+                      >
+                        Lihat alasan
+                        <ChevronDown className={"h-3.5 w-3.5 transition-transform " + (openRec === h.id ? "rotate-180" : "")} />
+                      </button>
+                    )}
                   </div>
                 </div>
                 {h.status === "Selesai" && h.rec && openRec === h.id && (
