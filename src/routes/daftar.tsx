@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { CheckCircle2, Clock, Users, Repeat, QrCode, ExternalLink } from "lucide-react";
-import { Shell } from "@/components/Shell";
+import { CheckCircle2, Clock, Users, Repeat, QrCode, ExternalLink, ArrowLeft } from "lucide-react";
+
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
