@@ -151,7 +151,8 @@ export function Shell({ nav, children }: { nav: string[]; children: ReactNode })
       {/* Mobile drawer */}
       {open && (
         <div className="fixed inset-x-0 top-[57px] z-30 border-b bg-background px-5 py-4 lg:hidden">
-          {navLinks(false)}
+          {navLinks(false, mainItems)}
+          {profileItem && <div className="mt-2 border-t pt-2">{navLinks(false, [profileItem])}</div>}
         </div>
       )}
 
