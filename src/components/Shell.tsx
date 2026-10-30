@@ -32,7 +32,7 @@ const items: NavItem[] = [
   { label: "Jadwal", to: "/jadwal", icon: CalendarDays },
   { label: "Daftar", to: "/daftar", icon: ClipboardList },
   { label: "Status", to: "/status", icon: Clock },
-  { label: "Profil", icon: User },
+  { label: "Profil", to: "/profil", icon: User },
 ];
 
 export function Shell({ nav, children }: { nav: string[]; children: ReactNode }) {
