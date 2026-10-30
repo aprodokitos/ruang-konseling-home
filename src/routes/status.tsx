@@ -2,6 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { QrCode, CalendarDays, MapPin, XCircle, FileText, Plus, History } from "lucide-react";
 import { Shell, Badge } from "@/components/Shell";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export const Route = createFileRoute("/status")({
   head: () => ({
@@ -122,6 +126,21 @@ function Status() {
           </div>
         </div>
       </section>
+
+      <AlertDialog open={cancelOpen} onOpenChange={setCancelOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Batalkan pengajuan ini?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Pengajuan ke {active.counselor} pada {active.day} akan dibatalkan dan jadwalnya dibuka untuk mahasiswa lain.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Jangan batalkan</AlertDialogCancel>
+            <AlertDialogAction onClick={() => setCancelled(true)}>Ya, batalkan</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Shell>
   );
 }
