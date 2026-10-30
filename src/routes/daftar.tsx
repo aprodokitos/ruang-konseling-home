@@ -73,18 +73,56 @@ function Daftar() {
           <p className="mt-3 text-muted-foreground">
             Status pengajuanmu sekarang <strong className="text-foreground">Pending</strong> — menunggu respons {counselor} untuk {day}, pukul {slot}.
           </p>
-          <div className="mt-8 rounded-2xl border bg-card p-6">
-            <p className="font-semibold">Langkah berikutnya</p>
-            <p className="mt-1 text-sm text-muted-foreground">Isi detail masalah dan pertanyaan tambahan di formulir Fakultas Kedokteran.</p>
-            <div className="mx-auto mt-5 grid h-40 w-40 place-items-center rounded-xl border-2 border-dashed bg-muted">
+          <Link to="/status" className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">
+            Lihat Status Pengajuan
+          </Link>
+          <div>
+            <Link to="/" className="mt-6 inline-block text-sm text-primary underline-offset-4 hover:underline">Kembali ke Beranda</Link>
+          </div>
+        </section>
+      </Page>
+    );
+  }
+
+  if (stage === "link") {
+    return (
+      <Page>
+        <section className="mx-auto max-w-3xl px-6 py-14">
+          <button onClick={() => setStage("form")} className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
+            <ArrowLeft className="h-4 w-4" /> Kembali ke formulir
+          </button>
+          <p className="mt-6 text-sm font-medium text-primary">Langkah terakhir</p>
+          <h1 className="mt-3 text-4xl md:text-5xl">Isi formulir <em className="text-primary">detail masalah</em>.</h1>
+          <p className="mt-4 max-w-lg text-muted-foreground">
+            Sebelum mengirim pengajuan, isi detail masalah dan pertanyaan tambahan di formulir Fakultas Kedokteran lewat tautan atau pindai kode QR di bawah.
+          </p>
+
+          <div className="mt-8 grid gap-6 rounded-2xl border bg-card p-6 sm:grid-cols-[auto_1fr] sm:items-center">
+            <div className="mx-auto grid h-40 w-40 place-items-center rounded-xl border-2 border-dashed bg-muted">
               <QrCode className="h-20 w-20 text-muted-foreground" />
             </div>
-            <a href="#" className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">
-              Buka formulir detail <ExternalLink className="h-4 w-4" />
-            </a>
+            <div>
+              <p className="font-semibold">Formulir Detail Konseling FK</p>
+              <p className="mt-1 text-sm text-muted-foreground">Pindai kode QR dengan ponsel, atau buka tautan di tab baru.</p>
+              <a href="#" target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-medium hover:bg-muted">
+                Buka formulir <ExternalLink className="h-4 w-4" />
+              </a>
+            </div>
           </div>
-          <Link to="/" className="mt-6 inline-block text-sm text-primary underline-offset-4 hover:underline">Kembali ke Beranda</Link>
+
+          <label className="mt-6 flex cursor-pointer items-start gap-3 rounded-2xl border bg-accent/40 p-5 text-sm">
+            <input type="checkbox" className="mt-0.5 accent-[var(--primary)]" checked={linkDone} onChange={() => setLinkDone((v) => !v)} />
+            Saya sudah mengisi formulir detail masalah melalui tautan / kode QR di atas.
+          </label>
+
+          <div className="mt-10 flex items-center justify-end gap-4">
+            {!linkDone && <p className="text-sm text-muted-foreground">Centang konfirmasi untuk mengirim.</p>}
+            <button disabled={!linkDone} onClick={() => setConfirmOpen(true)} className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-opacity disabled:opacity-40">
+              Kirim Pengajuan
+            </button>
+          </div>
         </section>
+        {dialog}
       </Page>
     );
   }
@@ -182,9 +220,9 @@ function Daftar() {
         </Step>
 
         <div className="mt-10 flex items-center justify-end gap-4">
-          {!valid && <p className="text-sm text-muted-foreground">Lengkapi semua langkah untuk mengirim.</p>}
-          <button disabled={!valid} onClick={() => setConfirmOpen(true)} className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-opacity disabled:opacity-40">
-            Kirim Pengajuan
+          {!valid && <p className="text-sm text-muted-foreground">Lengkapi semua langkah untuk melanjutkan.</p>}
+          <button disabled={!valid} onClick={() => { setStage("link"); window.scrollTo(0, 0); }} className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-opacity disabled:opacity-40">
+            Selanjutnya <ArrowRight className="h-4 w-4" />
           </button>
         </div>
       </section>
