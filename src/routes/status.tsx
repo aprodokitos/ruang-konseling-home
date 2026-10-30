@@ -233,7 +233,7 @@ function Status() {
           <AlertDialogHeader>
             <AlertDialogTitle>Batalkan pengajuan ini?</AlertDialogTitle>
             <AlertDialogDescription>
-              Pengajuan ke {active.counselor} pada {active.day} akan dibatalkan dan jadwalnya dibuka untuk mahasiswa lain.
+              Pengajuan ke {pending.counselor} pada {pending.day} akan dibatalkan dan jadwalnya dibuka untuk mahasiswa lain.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
