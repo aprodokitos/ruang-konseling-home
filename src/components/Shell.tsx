@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
   Leaf,
   Menu,
@@ -38,6 +38,14 @@ const items: NavItem[] = [
 export function Shell({ nav, children }: { nav: string[]; children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    setCollapsed(window.localStorage.getItem("rp-sidebar") === "mini");
+  }, []);
+  const toggle = (v: boolean) => {
+    setCollapsed(v);
+    window.localStorage.setItem("rp-sidebar", v ? "mini" : "full");
+  };
 
   const visible = items.filter((i) => nav.includes(i.label));
 
