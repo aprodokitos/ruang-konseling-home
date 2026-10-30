@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { QrCode, CalendarDays, MapPin, XCircle, FileText, Plus, History } from "lucide-react";
+import { QrCode, CalendarDays, MapPin, XCircle, FileText, Plus, History, ChevronDown, CheckCircle2 } from "lucide-react";
 import { Shell, Badge } from "@/components/Shell";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -32,14 +32,15 @@ const active = {
 };
 
 const history = [
-  { id: "RP-2409", category: "Masalah Manajemen Waktu", counselor: "dr. Ratna Sari, M.Pd.Ked", date: "Rabu, 22 Oktober", status: "Selesai" },
-  { id: "RP-2385", category: "Masalah Sosial", counselor: "dr. Maya Lestari, Sp.KJ", date: "Senin, 13 Oktober", status: "Selesai" },
+  { id: "RP-2409", category: "Masalah Manajemen Waktu", counselor: "dr. Ratna Sari, M.Pd.Ked", date: "Rabu, 22 Oktober", status: "Selesai", rec: { ringkasan: "Mahasiswa menyampaikan kesulitan membagi waktu antara kuliah, organisasi, dan istirahat. Sesi berfokus pada pemetaan prioritas mingguan.", saran: ["Susun jadwal harian dengan blok waktu belajar dan istirahat", "Coba teknik pomodoro selama 2 minggu", "Catat aktivitas harian untuk evaluasi mandiri"], tindakLanjut: "Evaluasi mandiri; konseling lanjutan dapat diajukan bila diperlukan." } },
+  { id: "RP-2385", category: "Masalah Sosial", counselor: "dr. Maya Lestari, Sp.KJ", date: "Senin, 13 Oktober", status: "Selesai", rec: { ringkasan: "Mahasiswa merasa sulit menyesuaikan diri dengan lingkungan baru di kampus. Sesi membahas cara memulai percakapan dan membangun kepercayaan diri.", saran: ["Ikut kegiatan organisasi atau komunitas kampus yang sesuai minat", "Latih memulai percakapan kecil dengan rekelas", "Jaga komunikasi dengan keluarga sebagai sumber dukungan"], tindakLanjut: "Dianjurkan melanjutkan ke sesi berikutnya dalam kategori yang sama." } },
   { id: "RP-2341", category: "Masalah Pribadi", counselor: "dr. Ratna Sari, M.Pd.Ked", date: "Jumat, 3 Oktober", status: "Ditolak" },
 ];
 
 function Status() {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [cancelled, setCancelled] = useState(false);
+  const [openRec, setOpenRec] = useState<string | null>(null);
 
   return (
     <Shell nav={["Beranda", "Jadwal", "Daftar", "Status", "Profil"]}>
@@ -107,17 +108,43 @@ function Status() {
           <h2 className="flex items-center gap-2 text-2xl"><History className="h-5 w-5 text-primary" /> Riwayat sesi</h2>
           <div className="mt-5 space-y-3">
             {history.map((h) => (
-              <div key={h.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-card p-4">
-                <div>
-                  <p className="font-semibold">{h.category} · <span className="font-mono text-xs text-muted-foreground">{h.id}</span></p>
-                  <p className="text-xs text-muted-foreground">{h.counselor} · {h.date}</p>
+              <div key={h.id} className="rounded-2xl border bg-card">
+                <div className="flex flex-wrap items-center justify-between gap-3 p-4">
+                  <div>
+                    <p className="font-semibold">{h.category} · <span className="font-mono text-xs text-muted-foreground">{h.id}</span></p>
+                    <p className="text-xs text-muted-foreground">{h.counselor} · {h.date}</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Badge s={h.status} />
+                    {h.status === "Selesai" && h.rec && (
+                      <button
+                        onClick={() => setOpenRec(openRec === h.id ? null : h.id)}
+                        aria-expanded={openRec === h.id}
+                        className="inline-flex items-center gap-1 rounded-full text-xs font-medium text-primary transition hover:bg-primary/10 px-3 py-1.5"
+                      >
+                        Lihat rekomendasi
+                        <ChevronDown className={"h-3.5 w-3.5 transition-transform " + (openRec === h.id ? "rotate-180" : "")} />
+                      </button>
+                    )}
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Badge s={h.status} />
-                  {h.status === "Selesai" && (
-                    <a href="#" className="text-xs font-medium text-primary underline-offset-4 hover:underline">Lihat rekomendasi</a>
-                  )}
-                </div>
+                {h.status === "Selesai" && h.rec && openRec === h.id && (
+                  <div className="border-t bg-muted/40 px-4 py-4 text-sm">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ringkasan sesi</p>
+                    <p className="mt-1 leading-relaxed">{h.rec.ringkasan}</p>
+                    <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Rekomendasi</p>
+                    <ul className="mt-1 space-y-1.5">
+                      {h.rec.saran.map((s, i) => (
+                        <li key={i} className="flex items-start gap-2">
+                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                          <span className="leading-relaxed">{s}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tindak lanjut</p>
+                    <p className="mt-1 leading-relaxed">{h.rec.tindakLanjut}</p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
