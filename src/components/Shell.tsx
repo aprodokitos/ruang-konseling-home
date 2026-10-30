@@ -124,12 +124,14 @@ export function Shell({ nav, children }: { nav: string[]; children: ReactNode })
             </button>
           )}
           {!collapsed && <div className="mt-6" />}
-          <div className={collapsed ? "mt-6" : undefined}>{navLinks(collapsed)}</div>
+          <div className={collapsed ? "mt-6" : undefined}>{navLinks(collapsed, mainItems)}</div>
         </div>
-        {!collapsed && (
-          <p className="px-3 text-[11px] leading-relaxed text-muted-foreground">
-            RuangPulih · Fakultas Kedokteran UPN "Veteran" Jakarta
-          </p>
+        {profileItem && (
+          <div className={collapsed ? "pb-1" : "mt-auto px-0"}>
+            <div className={collapsed ? "mt-4 border-t pt-4" : "border-t pt-4"}>
+              {navLinks(collapsed, [profileItem])}
+            </div>
+          </div>
         )}
       </aside>
 
