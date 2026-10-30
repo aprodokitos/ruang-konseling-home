@@ -108,17 +108,43 @@ function Status() {
           <h2 className="flex items-center gap-2 text-2xl"><History className="h-5 w-5 text-primary" /> Riwayat sesi</h2>
           <div className="mt-5 space-y-3">
             {history.map((h) => (
-              <div key={h.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-card p-4">
-                <div>
-                  <p className="font-semibold">{h.category} · <span className="font-mono text-xs text-muted-foreground">{h.id}</span></p>
-                  <p className="text-xs text-muted-foreground">{h.counselor} · {h.date}</p>
+              <div key={h.id} className="rounded-2xl border bg-card">
+                <div className="flex flex-wrap items-center justify-between gap-3 p-4">
+                  <div>
+                    <p className="font-semibold">{h.category} · <span className="font-mono text-xs text-muted-foreground">{h.id}</span></p>
+                    <p className="text-xs text-muted-foreground">{h.counselor} · {h.date}</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Badge s={h.status} />
+                    {h.status === "Selesai" && h.rec && (
+                      <button
+                        onClick={() => setOpenRec(openRec === h.id ? null : h.id)}
+                        aria-expanded={openRec === h.id}
+                        className="inline-flex items-center gap-1 rounded-full text-xs font-medium text-primary transition hover:bg-primary/10 px-3 py-1.5"
+                      >
+                        Lihat rekomendasi
+                        <ChevronDown className={"h-3.5 w-3.5 transition-transform " + (openRec === h.id ? "rotate-180" : "")} />
+                      </button>
+                    )}
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Badge s={h.status} />
-                  {h.status === "Selesai" && (
-                    <a href="#" className="text-xs font-medium text-primary underline-offset-4 hover:underline">Lihat rekomendasi</a>
-                  )}
-                </div>
+                {h.status === "Selesai" && h.rec && openRec === h.id && (
+                  <div className="border-t bg-muted/40 px-4 py-4 text-sm">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ringkasan sesi</p>
+                    <p className="mt-1 leading-relaxed">{h.rec.ringkasan}</p>
+                    <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Rekomendasi</p>
+                    <ul className="mt-1 space-y-1.5">
+                      {h.rec.saran.map((s, i) => (
+                        <li key={i} className="flex items-start gap-2">
+                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                          <span className="leading-relaxed">{s}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tindak lanjut</p>
+                    <p className="mt-1 leading-relaxed">{h.rec.tindakLanjut}</p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
