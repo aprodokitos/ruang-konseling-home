@@ -147,22 +147,22 @@ function Jadwal() {
                   </div>
                 ))}
               </div>
+
+              {/* Panel ajukan — muncul di bawah konselor yang dipilih */}
+              {picked?.name === c.name && (
+                <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-secondary p-5">
+                  <div>
+                    <p className="font-semibold">Slot {picked.slot}.00 · {picked.day} · {picked.name}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">Lanjutkan dengan mengisi kategori & keluhan singkat.</p>
+                  </div>
+                  <button className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20">
+                    Ajukan Konseling
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>
-
-        {/* Panel ajukan */}
-        {picked && (
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-secondary p-6">
-            <div>
-              <p className="font-semibold">Slot {picked.slot}.00 · {picked.day} · {picked.name}</p>
-              <p className="mt-1 text-sm text-muted-foreground">Lanjutkan dengan mengisi kategori & keluhan singkat.</p>
-            </div>
-            <button className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20">
-              Ajukan Konseling
-            </button>
-          </div>
-        )}
 
         <p className="mt-10 flex items-start gap-2 rounded-2xl border bg-card p-4 text-xs leading-relaxed text-muted-foreground">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
