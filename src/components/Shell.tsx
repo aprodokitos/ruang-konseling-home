@@ -31,7 +31,7 @@ const items: NavItem[] = [
   { label: "Beranda", to: "/", icon: Home },
   { label: "Jadwal", to: "/jadwal", icon: CalendarDays },
   { label: "Daftar", to: "/daftar", icon: ClipboardList },
-  { label: "Status", icon: Clock },
+  { label: "Status", to: "/status", icon: Clock },
   { label: "Profil", icon: User },
 ];
 

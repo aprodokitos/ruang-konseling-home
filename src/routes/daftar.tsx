@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { CheckCircle2, Clock, Users, Repeat, QrCode, ExternalLink } from "lucide-react";
-import { Shell } from "@/components/Shell";
+import { CheckCircle2, Clock, Users, Repeat, QrCode, ExternalLink, ArrowLeft } from "lucide-react";
+
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -66,7 +66,7 @@ function Daftar() {
 
   if (done) {
     return (
-      <Shell nav={[]}>
+      <Page>
         <section className="mx-auto max-w-xl px-6 py-16 text-center">
           <CheckCircle2 className="mx-auto h-12 w-12 text-primary" />
           <h1 className="mt-4 text-3xl md:text-4xl">Pengajuan terkirim</h1>
@@ -85,12 +85,12 @@ function Daftar() {
           </div>
           <Link to="/" className="mt-6 inline-block text-sm text-primary underline-offset-4 hover:underline">Kembali ke Beranda</Link>
         </section>
-      </Shell>
+      </Page>
     );
   }
 
   return (
-    <Shell nav={[]}>
+    <Page>
       <section className="mx-auto max-w-3xl px-6 py-14">
         <p className="text-sm font-medium text-primary">Daftar Konseling</p>
         <h1 className="mt-3 text-4xl md:text-5xl">Ajukan sesi <em className="text-primary">konseling</em>.</h1>
@@ -207,7 +207,7 @@ function Daftar() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </Shell>
+    </Page>
   );
 }
 
@@ -232,5 +232,26 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       <span className="mb-1.5 block text-xs font-medium text-muted-foreground">{label}</span>
       {children}
     </label>
+  );
+}
+
+function Page({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex min-h-screen flex-col">
+      <header className="sticky top-0 z-20 border-b bg-background/85 backdrop-blur">
+        <div className="mx-auto flex max-w-3xl items-center px-6 py-3">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 rounded-full border bg-card px-4 py-2 text-sm font-medium transition hover:bg-muted"
+          >
+            <ArrowLeft className="h-4 w-4" /> Kembali ke Beranda
+          </Link>
+        </div>
+      </header>
+      <main className="min-w-0 flex-1">{children}</main>
+      <footer className="mt-20 border-t py-8 text-center text-xs text-muted-foreground">
+        RuangPulih · Fakultas Kedokteran UPN "Veteran" Jakarta · Konseling umum, non-medis
+      </footer>
+    </div>
   );
 }

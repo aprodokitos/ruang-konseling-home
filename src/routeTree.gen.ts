@@ -14,6 +14,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as DaftarRouteImport } from './routes/daftar'
 import { Route as JadwalRouteImport } from './routes/jadwal'
 import { Route as KonselorRouteImport } from './routes/konselor'
+import { Route as StatusRouteImport } from './routes/status'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,6 +41,11 @@ const KonselorRoute = KonselorRouteImport.update({
   path: '/konselor',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StatusRoute = StatusRouteImport.update({
+  id: '/status',
+  path: '/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/daftar': typeof DaftarRoute
   '/jadwal': typeof JadwalRoute
   '/konselor': typeof KonselorRoute
+  '/status': typeof StatusRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/daftar': typeof DaftarRoute
   '/jadwal': typeof JadwalRoute
   '/konselor': typeof KonselorRoute
+  '/status': typeof StatusRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +70,21 @@ export interface FileRoutesById {
   '/daftar': typeof DaftarRoute
   '/jadwal': typeof JadwalRoute
   '/konselor': typeof KonselorRoute
+  '/status': typeof StatusRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/daftar' | '/jadwal' | '/konselor'
+  fullPaths: '/' | '/admin' | '/daftar' | '/jadwal' | '/konselor' | '/status'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/daftar' | '/jadwal' | '/konselor'
-  id: '__root__' | '/' | '/admin' | '/daftar' | '/jadwal' | '/konselor'
+  to: '/' | '/admin' | '/daftar' | '/jadwal' | '/konselor' | '/status'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/daftar'
+    | '/jadwal'
+    | '/konselor'
+    | '/status'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,6 +93,7 @@ export interface RootRouteChildren {
   DaftarRoute: typeof DaftarRoute
   JadwalRoute: typeof JadwalRoute
   KonselorRoute: typeof KonselorRoute
+  StatusRoute: typeof StatusRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -116,6 +133,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KonselorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/status': {
+      id: '/status'
+      path: '/status'
+      fullPath: '/status'
+      preLoaderRoute: typeof StatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -125,6 +149,7 @@ const rootRouteChildren: RootRouteChildren = {
   DaftarRoute: DaftarRoute,
   JadwalRoute: JadwalRoute,
   KonselorRoute: KonselorRoute,
+  StatusRoute: StatusRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
