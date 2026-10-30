@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { CalendarDays, MapPin, XCircle, FileText, Plus, History, ChevronDown, CheckCircle2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { CalendarDays, MapPin, XCircle, Plus, History, ChevronDown, CheckCircle2, Lock, Timer, ClipboardCheck } from "lucide-react";
 import { Shell, Badge } from "@/components/Shell";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -21,15 +21,112 @@ export const Route = createFileRoute("/status")({
   component: Status,
 });
 
-const active = {
+type Active = { category: string; counselor: string; day: string; slot: string; place: string; status: string };
+
+const pending: Active = {
+  category: "Masalah Keluarga",
+  counselor: "dr. Maya Lestari, Sp.KJ",
+  day: "Selasa, 10 November",
+  slot: "13.00–14.00",
+  place: "Ruang BK Lt. 2",
+  status: "Pending",
+};
+
+const active: Active = {
   category: "Masalah Akademik",
   counselor: "Andika Pratama, M.Psi., Psikolog",
   day: "Kamis, 5 November",
   slot: "09.00–10.00",
   place: "Ruang BK Lt. 2",
   status: "Diterima",
-  sesi: "Sesi 1 dari 2 untuk kategori ini",
 };
+
+function InfoGrid({ a }: { a: Active }) {
+  return (
+    <div className="mt-6 grid gap-3 sm:grid-cols-2">
+      {([[CalendarDays, "Jadwal", `${a.day} · ${a.slot}`], [MapPin, "Lokasi", a.place]] as const).map(([Icon, k, v]) => (
+        <div key={k} className="flex items-start gap-3 rounded-xl bg-muted px-4 py-3">
+          <Icon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+          <div>
+            <p className="text-xs text-muted-foreground">{k}</p>
+            <p className="text-sm font-medium">{v}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ActiveCard({ a, onCancel }: { a: Active; onCancel?: () => void }) {
+  const canCancel = a.status === "Pending";
+  return (
+    <div className="rounded-3xl border bg-card p-6 md:p-8">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-xs uppercase tracking-wider text-muted-foreground">Pengajuan · {a.category}</p>
+          <p className="mt-2 font-serif text-2xl">{a.counselor}</p>
+        </div>
+        <Badge s={a.status} />
+      </div>
+      <InfoGrid a={a} />
+      <div className="mt-6">
+        {canCancel ? (
+          <button
+            onClick={onCancel}
+            className="inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-medium text-destructive transition hover:bg-destructive/10"
+          >
+            <XCircle className="h-4 w-4" /> Batalkan pengajuan
+          </button>
+        ) : (
+          <p className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Lock className="h-3.5 w-3.5" /> Pengajuan sudah diterima konselor, sehingga tidak bisa dibatalkan.
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Contoh: sesi berlangsung, sisa waktu dimulai dari 5 menit 20 detik
+function LiveCard() {
+  const [left, setLeft] = useState(5 * 60 + 20);
+  useEffect(() => {
+    const t = setInterval(() => setLeft((s) => Math.max(0, s - 1)), 1000);
+    return () => clearInterval(t);
+  }, []);
+  const surveyOpen = left <= 5 * 60;
+  const mm = String(Math.floor(left / 60)).padStart(2, "0");
+  const ss = String(left % 60).padStart(2, "0");
+  const a: Active = { ...active, category: "Masalah Manajemen Waktu", counselor: "dr. Ratna Sari, M.Pd.Ked", day: "Hari ini", slot: "14.00–15.00", status: "Berlangsung" };
+  return (
+    <div className="rounded-3xl border-2 border-primary/40 bg-card p-6 md:p-8">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-xs uppercase tracking-wider text-muted-foreground">Sesi berlangsung · {a.category}</p>
+          <p className="mt-2 font-serif text-2xl">{a.counselor}</p>
+        </div>
+        <Badge s={a.status} />
+      </div>
+      <div className="mt-5 flex items-center gap-3 rounded-xl bg-primary/10 px-4 py-3">
+        <Timer className="h-5 w-5 text-primary" />
+        <div>
+          <p className="text-xs text-muted-foreground">Sisa waktu sesi</p>
+          <p className="font-mono text-xl font-semibold">{mm}:{ss}</p>
+        </div>
+      </div>
+      <InfoGrid a={a} />
+      <div className="mt-6">
+        {surveyOpen ? (
+          <Link to="/survei" className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">
+            <ClipboardCheck className="h-4 w-4" /> Isi Survei Kepuasan
+          </Link>
+        ) : (
+          <p className="text-xs text-muted-foreground">Tombol survei kepuasan akan muncul 5 menit sebelum sesi selesai.</p>
+        )}
+      </div>
+    </div>
+  );
+}
 
 const history = [
   { id: "RP-2409", category: "Masalah Manajemen Waktu", counselor: "dr. Ratna Sari, M.Pd.Ked", date: "Rabu, 22 Oktober", status: "Selesai", rec: { ringkasan: "Mahasiswa menyampaikan kesulitan membagi waktu antara kuliah, organisasi, dan istirahat. Sesi berfokus pada pemetaan prioritas mingguan.", saran: ["Susun jadwal harian dengan blok waktu belajar dan istirahat", "Coba teknik pomodoro selama 2 minggu", "Catat aktivitas harian untuk evaluasi mandiri"], tindakLanjut: "Evaluasi mandiri; konseling lanjutan dapat diajukan bila diperlukan." } },
@@ -49,50 +146,23 @@ function Status() {
         <h1 className="mt-3 text-4xl md:text-5xl">Pantau <em className="text-primary">pengajuanmu</em>.</h1>
         <p className="mt-4 max-w-lg text-muted-foreground">Lihat status pengajuan aktif dan riwayat sesi konseling yang pernah kamu ikuti.</p>
 
-        {cancelled ? (
-          <div className="mt-10 rounded-2xl border border-dashed bg-muted/40 p-8 text-center">
-            <p className="font-semibold">Tidak ada pengajuan aktif</p>
-            <p className="mt-1 text-sm text-muted-foreground">Ajukan kembali kapan pun kamu siap bercerita.</p>
-            <Link to="/daftar" className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">
-              <Plus className="h-4 w-4" /> Ajukan Konseling
-            </Link>
-          </div>
-        ) : (
-          <div className="mt-10 rounded-3xl border bg-card p-6 md:p-8">
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <p className="text-xs uppercase tracking-wider text-muted-foreground">Pengajuan aktif · {active.category}</p>
-                <p className="mt-2 font-serif text-2xl">{active.counselor}</p>
-              </div>
-              <Badge s={active.status} />
-            </div>
+        <div className="mt-10 space-y-5">
+          <LiveCard />
 
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              {[[CalendarDays, "Jadwal", `${active.day} · ${active.slot}`], [MapPin, "Lokasi", active.place]].map(([I, k, v]) => {
-                const Icon = I as typeof MapPin;
-                return (
-                  <div key={k as string} className="flex items-start gap-3 rounded-xl bg-muted px-4 py-3">
-                    <Icon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">{k as string}</p>
-                      <p className="text-sm font-medium">{v as string}</p>
-                    </div>
-                  </div>
-                );
-              })}
+          {cancelled ? (
+            <div className="rounded-2xl border border-dashed bg-muted/40 p-8 text-center">
+              <p className="font-semibold">Pengajuan pending dibatalkan</p>
+              <p className="mt-1 text-sm text-muted-foreground">Ajukan kembali kapan pun kamu siap bercerita.</p>
+              <Link to="/daftar" className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">
+                <Plus className="h-4 w-4" /> Ajukan Konseling
+              </Link>
             </div>
+          ) : (
+            <ActiveCard a={pending} onCancel={() => setCancelOpen(true)} />
+          )}
 
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <button
-                onClick={() => setCancelOpen(true)}
-                className="inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-medium text-destructive transition hover:bg-destructive/10"
-              >
-                <XCircle className="h-4 w-4" /> Batalkan pengajuan
-              </button>
-            </div>
-          </div>
-        )}
+          <ActiveCard a={active} />
+        </div>
 
         <div className="mt-12">
           <h2 className="flex items-center gap-2 text-2xl"><History className="h-5 w-5 text-primary" /> Riwayat sesi</h2>
@@ -163,7 +233,7 @@ function Status() {
           <AlertDialogHeader>
             <AlertDialogTitle>Batalkan pengajuan ini?</AlertDialogTitle>
             <AlertDialogDescription>
-              Pengajuan ke {active.counselor} pada {active.day} akan dibatalkan dan jadwalnya dibuka untuk mahasiswa lain.
+              Pengajuan ke {pending.counselor} pada {pending.day} akan dibatalkan dan jadwalnya dibuka untuk mahasiswa lain.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

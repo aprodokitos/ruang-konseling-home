@@ -173,6 +173,7 @@ export function Stat({ label, value, hint }: { label: string; value: string; hin
 
 const tone: Record<string, string> = {
   Menunggu: "bg-warning/20 text-accent-foreground",
+  Pending: "bg-warning/20 text-accent-foreground",
   Diterima: "bg-secondary text-secondary-foreground",
   Berlangsung: "bg-primary text-primary-foreground",
   Selesai: "bg-muted text-muted-foreground",
