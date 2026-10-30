@@ -234,3 +234,24 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     </label>
   );
 }
+
+function Page({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex min-h-screen flex-col">
+      <header className="sticky top-0 z-20 border-b bg-background/85 backdrop-blur">
+        <div className="mx-auto flex max-w-3xl items-center px-6 py-3">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 rounded-full border bg-card px-4 py-2 text-sm font-medium transition hover:bg-muted"
+          >
+            <ArrowLeft className="h-4 w-4" /> Kembali ke Beranda
+          </Link>
+        </div>
+      </header>
+      <main className="min-w-0 flex-1">{children}</main>
+      <footer className="mt-20 border-t py-8 text-center text-xs text-muted-foreground">
+        RuangPulih · Fakultas Kedokteran UPN "Veteran" Jakarta · Konseling umum, non-medis
+      </footer>
+    </div>
+  );
+}
