@@ -49,50 +49,23 @@ function Status() {
         <h1 className="mt-3 text-4xl md:text-5xl">Pantau <em className="text-primary">pengajuanmu</em>.</h1>
         <p className="mt-4 max-w-lg text-muted-foreground">Lihat status pengajuan aktif dan riwayat sesi konseling yang pernah kamu ikuti.</p>
 
-        {cancelled ? (
-          <div className="mt-10 rounded-2xl border border-dashed bg-muted/40 p-8 text-center">
-            <p className="font-semibold">Tidak ada pengajuan aktif</p>
-            <p className="mt-1 text-sm text-muted-foreground">Ajukan kembali kapan pun kamu siap bercerita.</p>
-            <Link to="/daftar" className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">
-              <Plus className="h-4 w-4" /> Ajukan Konseling
-            </Link>
-          </div>
-        ) : (
-          <div className="mt-10 rounded-3xl border bg-card p-6 md:p-8">
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <p className="text-xs uppercase tracking-wider text-muted-foreground">Pengajuan aktif · {active.category}</p>
-                <p className="mt-2 font-serif text-2xl">{active.counselor}</p>
-              </div>
-              <Badge s={active.status} />
-            </div>
+        <div className="mt-10 space-y-5">
+          <LiveCard />
 
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              {[[CalendarDays, "Jadwal", `${active.day} · ${active.slot}`], [MapPin, "Lokasi", active.place]].map(([I, k, v]) => {
-                const Icon = I as typeof MapPin;
-                return (
-                  <div key={k as string} className="flex items-start gap-3 rounded-xl bg-muted px-4 py-3">
-                    <Icon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">{k as string}</p>
-                      <p className="text-sm font-medium">{v as string}</p>
-                    </div>
-                  </div>
-                );
-              })}
+          {cancelled ? (
+            <div className="rounded-2xl border border-dashed bg-muted/40 p-8 text-center">
+              <p className="font-semibold">Pengajuan pending dibatalkan</p>
+              <p className="mt-1 text-sm text-muted-foreground">Ajukan kembali kapan pun kamu siap bercerita.</p>
+              <Link to="/daftar" className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">
+                <Plus className="h-4 w-4" /> Ajukan Konseling
+              </Link>
             </div>
+          ) : (
+            <ActiveCard a={pending} onCancel={() => setCancelOpen(true)} />
+          )}
 
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <button
-                onClick={() => setCancelOpen(true)}
-                className="inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-medium text-destructive transition hover:bg-destructive/10"
-              >
-                <XCircle className="h-4 w-4" /> Batalkan pengajuan
-              </button>
-            </div>
-          </div>
-        )}
+          <ActiveCard a={active} />
+        </div>
 
         <div className="mt-12">
           <h2 className="flex items-center gap-2 text-2xl"><History className="h-5 w-5 text-primary" /> Riwayat sesi</h2>
