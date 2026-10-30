@@ -40,6 +40,7 @@ const history = [
 function Status() {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [cancelled, setCancelled] = useState(false);
+  const [openRec, setOpenRec] = useState<string | null>(null);
 
   return (
     <Shell nav={["Beranda", "Jadwal", "Daftar", "Status", "Profil"]}>
