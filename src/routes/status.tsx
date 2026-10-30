@@ -155,6 +155,13 @@ function Status() {
                     <p className="mt-1 leading-relaxed">{h.rec.tindakLanjut}</p>
                   </div>
                 )}
+                {h.status === "Ditolak" && h.alasan && openRec === h.id && (
+                  <div className="border-t bg-muted/40 px-4 py-4 text-sm">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Alasan penolakan</p>
+                    <p className="mt-1 leading-relaxed">{h.alasan}</p>
+                    <p className="mt-3 text-xs text-muted-foreground">Kalau mau mengajukan lagi, isi form pengajuan yang baru ya.</p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
