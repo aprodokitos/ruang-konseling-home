@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { QrCode, CalendarDays, MapPin, XCircle, FileText, Plus, History } from "lucide-react";
+import { QrCode, CalendarDays, MapPin, XCircle, FileText, Plus, History, ChevronDown, CheckCircle2 } from "lucide-react";
 import { Shell, Badge } from "@/components/Shell";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
