@@ -121,9 +121,7 @@ export function Shell({ nav, children }: { nav: string[]; children: ReactNode })
               <PanelLeftOpen className="h-4 w-4" />
             </button>
           )}
-          {!collapsed && (
-            <p className="mt-6 mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">Menu</p>
-          )}
+          {!collapsed && <div className="mt-6" />}
           <div className={collapsed ? "mt-6" : undefined}>{navLinks(collapsed)}</div>
         </div>
         {!collapsed && (
