@@ -66,7 +66,7 @@ function Daftar() {
 
   if (done) {
     return (
-      <Shell nav={[]}>
+      <Page>
         <section className="mx-auto max-w-xl px-6 py-16 text-center">
           <CheckCircle2 className="mx-auto h-12 w-12 text-primary" />
           <h1 className="mt-4 text-3xl md:text-4xl">Pengajuan terkirim</h1>
@@ -85,12 +85,12 @@ function Daftar() {
           </div>
           <Link to="/" className="mt-6 inline-block text-sm text-primary underline-offset-4 hover:underline">Kembali ke Beranda</Link>
         </section>
-      </Shell>
+      </Page>
     );
   }
 
   return (
-    <Shell nav={[]}>
+    <Page>
       <section className="mx-auto max-w-3xl px-6 py-14">
         <p className="text-sm font-medium text-primary">Daftar Konseling</p>
         <h1 className="mt-3 text-4xl md:text-5xl">Ajukan sesi <em className="text-primary">konseling</em>.</h1>
@@ -207,7 +207,7 @@ function Daftar() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </Shell>
+    </Page>
   );
 }
 
