@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as DaftarRouteImport } from './routes/daftar'
 import { Route as JadwalRouteImport } from './routes/jadwal'
 import { Route as KonselorRouteImport } from './routes/konselor'
 
@@ -22,6 +23,11 @@ const IndexRoute = IndexRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DaftarRoute = DaftarRouteImport.update({
+  id: '/daftar',
+  path: '/daftar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JadwalRoute = JadwalRouteImport.update({
@@ -38,12 +44,14 @@ const KonselorRoute = KonselorRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/daftar': typeof DaftarRoute
   '/jadwal': typeof JadwalRoute
   '/konselor': typeof KonselorRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/daftar': typeof DaftarRoute
   '/jadwal': typeof JadwalRoute
   '/konselor': typeof KonselorRoute
 }
@@ -51,20 +59,22 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/daftar': typeof DaftarRoute
   '/jadwal': typeof JadwalRoute
   '/konselor': typeof KonselorRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/jadwal' | '/konselor'
+  fullPaths: '/' | '/admin' | '/daftar' | '/jadwal' | '/konselor'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/jadwal' | '/konselor'
-  id: '__root__' | '/' | '/admin' | '/jadwal' | '/konselor'
+  to: '/' | '/admin' | '/daftar' | '/jadwal' | '/konselor'
+  id: '__root__' | '/' | '/admin' | '/daftar' | '/jadwal' | '/konselor'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  DaftarRoute: typeof DaftarRoute
   JadwalRoute: typeof JadwalRoute
   KonselorRoute: typeof KonselorRoute
 }
@@ -83,6 +93,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/daftar': {
+      id: '/daftar'
+      path: '/daftar'
+      fullPath: '/daftar'
+      preLoaderRoute: typeof DaftarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/jadwal': {
@@ -105,6 +122,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  DaftarRoute: DaftarRoute,
   JadwalRoute: JadwalRoute,
   KonselorRoute: KonselorRoute,
 }
