@@ -138,6 +138,7 @@ function Status() {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [cancelled, setCancelled] = useState(false);
   const [openRec, setOpenRec] = useState<string | null>(null);
+  const [demo, setDemo] = useState<"Pending" | "Diterima" | "Berlangsung">("Pending");
 
   return (
     <Shell nav={["Beranda", "Jadwal", "Daftar", "Status", "Profil"]}>
@@ -146,22 +147,34 @@ function Status() {
         <h1 className="mt-3 text-4xl md:text-5xl">Pantau <em className="text-primary">pengajuanmu</em>.</h1>
         <p className="mt-4 max-w-lg text-muted-foreground">Lihat status pengajuan aktif dan riwayat sesi konseling yang pernah kamu ikuti.</p>
 
-        <div className="mt-10 space-y-5">
-          <LiveCard />
+        {/* Contoh tampilan: dalam satu waktu mahasiswa hanya punya 1 pengajuan aktif */}
+        <div className="mt-8 flex flex-wrap items-center gap-2 rounded-2xl border border-dashed p-3 text-xs">
+          <span className="text-muted-foreground">Contoh tampilan status:</span>
+          {(["Pending", "Diterima", "Berlangsung"] as const).map((s) => (
+            <button key={s} onClick={() => { setDemo(s); setCancelled(false); }} aria-pressed={demo === s}
+              className={"rounded-full border px-3 py-1 font-medium transition " + (demo === s ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted")}>
+              {s}
+            </button>
+          ))}
+        </div>
 
+        <div className="mt-5">
           {cancelled ? (
             <div className="rounded-2xl border border-dashed bg-muted/40 p-8 text-center">
-              <p className="font-semibold">Pengajuan pending dibatalkan</p>
+              <p className="font-semibold">Tidak ada pengajuan aktif</p>
               <p className="mt-1 text-sm text-muted-foreground">Ajukan kembali kapan pun kamu siap bercerita.</p>
               <Link to="/daftar" className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">
                 <Plus className="h-4 w-4" /> Ajukan Konseling
               </Link>
             </div>
-          ) : (
+          ) : demo === "Pending" ? (
             <ActiveCard a={pending} onCancel={() => setCancelOpen(true)} />
+          ) : demo === "Diterima" ? (
+            <ActiveCard a={active} />
+          ) : (
+            <LiveCard />
           )}
-
-          <ActiveCard a={active} />
+          <p className="mt-3 text-xs text-muted-foreground">Kamu hanya bisa memiliki satu pengajuan aktif. Pengajuan baru bisa dibuat setelah sesi ini selesai.</p>
         </div>
 
         <div className="mt-12">
