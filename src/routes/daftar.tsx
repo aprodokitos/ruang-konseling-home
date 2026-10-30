@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { CheckCircle2, Clock, Users, Repeat, QrCode, ExternalLink, ArrowLeft } from "lucide-react";
+import { CheckCircle2, Clock, Users, Repeat, QrCode, ExternalLink, ArrowLeft, ArrowRight } from "lucide-react";
 
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -55,6 +55,8 @@ function Daftar() {
   const [slot, setSlot] = useState("");
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [done, setDone] = useState(false);
+  const [stage, setStage] = useState<"form" | "link">("form");
+  const [linkDone, setLinkDone] = useState(false);
 
   const c = counselors.find((x) => x.name === counselor);
   const dayOptions = c ? Object.keys(c.days) : [];
@@ -63,6 +65,23 @@ function Daftar() {
   const toggle = (s: string) => setChecked((p) => (p.includes(s) ? p.filter((x) => x !== s) : [...p, s]));
   const hasCategory = checked.length > 0 || (useOther && other.trim().length > 0);
   const valid = hasCategory && consent.every(Boolean) && counselor && day && slot;
+
+  const dialog = (
+      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Sudah yakin isi data dengan benar?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Pengajuan ke {counselor} pada {day}, pukul {slot}. Data tidak bisa diubah setelah dikirim, tapi kamu masih bisa membatalkan selama status Pending.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Periksa lagi</AlertDialogCancel>
+            <AlertDialogAction onClick={() => setDone(true)}>Ya, kirim</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+  );
 
   if (done) {
     return (
@@ -227,20 +246,6 @@ function Daftar() {
         </div>
       </section>
 
-      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Sudah yakin isi data dengan benar?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Pengajuan ke {counselor} pada {day}, pukul {slot}. Data tidak bisa diubah setelah dikirim, tapi kamu masih bisa membatalkan selama status Pending.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Periksa lagi</AlertDialogCancel>
-            <AlertDialogAction onClick={() => setDone(true)}>Ya, kirim</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </Page>
   );
 }
