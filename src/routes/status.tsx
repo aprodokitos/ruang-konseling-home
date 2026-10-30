@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { QrCode, CalendarDays, MapPin, XCircle, FileText, Plus, History, ChevronDown, CheckCircle2 } from "lucide-react";
+import { CalendarDays, MapPin, XCircle, FileText, Plus, History, ChevronDown, CheckCircle2 } from "lucide-react";
 import { Shell, Badge } from "@/components/Shell";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -82,16 +82,6 @@ function Status() {
               })}
             </div>
 
-            <div className="mt-6 flex flex-col items-center gap-4 rounded-2xl border bg-secondary/50 p-6 sm:flex-row">
-              <div className="grid h-36 w-36 shrink-0 place-items-center rounded-xl border-2 border-dashed bg-background">
-                <QrCode className="h-16 w-16 text-muted-foreground" />
-              </div>
-              <div className="text-center sm:text-left">
-                <p className="font-semibold">QR kedatangan</p>
-                <p className="mt-1 text-sm text-muted-foreground">Tunjukkan kode ini kepada konselor saat sesi dimulai.</p>
-                <p className="mt-2 text-sm">{active.sesi}</p>
-              </div>
-            </div>
 
             <div className="mt-6 flex flex-wrap gap-3">
               <button
