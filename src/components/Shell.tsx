@@ -104,7 +104,7 @@ export function Shell({ nav, children }: { nav: string[]; children: ReactNode })
               <button
                 type="button"
                 aria-label="Minimalkan sidebar"
-                onClick={() => setCollapsed(true)}
+                onClick={() => toggle(true)}
                 className="grid h-8 w-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground"
               >
                 <PanelLeftClose className="h-4 w-4" />
@@ -115,7 +115,7 @@ export function Shell({ nav, children }: { nav: string[]; children: ReactNode })
             <button
               type="button"
               aria-label="Perluas sidebar"
-              onClick={() => setCollapsed(false)}
+              onClick={() => toggle(false)}
               className="mt-3 grid h-8 w-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground"
             >
               <PanelLeftOpen className="h-4 w-4" />
