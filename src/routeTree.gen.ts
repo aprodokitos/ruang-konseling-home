@@ -15,6 +15,7 @@ import { Route as DaftarRouteImport } from './routes/daftar'
 import { Route as JadwalRouteImport } from './routes/jadwal'
 import { Route as KonselorRouteImport } from './routes/konselor'
 import { Route as StatusRouteImport } from './routes/status'
+import { Route as SurveiRouteImport } from './routes/survei'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +47,11 @@ const StatusRoute = StatusRouteImport.update({
   path: '/status',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SurveiRoute = SurveiRouteImport.update({
+  id: '/survei',
+  path: '/survei',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/jadwal': typeof JadwalRoute
   '/konselor': typeof KonselorRoute
   '/status': typeof StatusRoute
+  '/survei': typeof SurveiRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/jadwal': typeof JadwalRoute
   '/konselor': typeof KonselorRoute
   '/status': typeof StatusRoute
+  '/survei': typeof SurveiRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,12 +79,15 @@ export interface FileRoutesById {
   '/jadwal': typeof JadwalRoute
   '/konselor': typeof KonselorRoute
   '/status': typeof StatusRoute
+  '/survei': typeof SurveiRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/daftar' | '/jadwal' | '/konselor' | '/status'
+  fullPaths:
+    '/' | '/admin' | '/daftar' | '/jadwal' | '/konselor' | '/status' | '/survei'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/daftar' | '/jadwal' | '/konselor' | '/status'
+  to:
+    '/' | '/admin' | '/daftar' | '/jadwal' | '/konselor' | '/status' | '/survei'
   id:
     | '__root__'
     | '/'
@@ -85,6 +96,7 @@ export interface FileRouteTypes {
     | '/jadwal'
     | '/konselor'
     | '/status'
+    | '/survei'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -94,6 +106,7 @@ export interface RootRouteChildren {
   JadwalRoute: typeof JadwalRoute
   KonselorRoute: typeof KonselorRoute
   StatusRoute: typeof StatusRoute
+  SurveiRoute: typeof SurveiRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -140,6 +153,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StatusRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/survei': {
+      id: '/survei'
+      path: '/survei'
+      fullPath: '/survei'
+      preLoaderRoute: typeof SurveiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -150,6 +170,7 @@ const rootRouteChildren: RootRouteChildren = {
   JadwalRoute: JadwalRoute,
   KonselorRoute: KonselorRoute,
   StatusRoute: StatusRoute,
+  SurveiRoute: SurveiRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
