@@ -32,8 +32,8 @@ const active = {
 };
 
 const history = [
-  { id: "RP-2409", category: "Masalah Manajemen Waktu", counselor: "dr. Ratna Sari, M.Pd.Ked", date: "Rabu, 22 Oktober", status: "Selesai" },
-  { id: "RP-2385", category: "Masalah Sosial", counselor: "dr. Maya Lestari, Sp.KJ", date: "Senin, 13 Oktober", status: "Selesai" },
+  { id: "RP-2409", category: "Masalah Manajemen Waktu", counselor: "dr. Ratna Sari, M.Pd.Ked", date: "Rabu, 22 Oktober", status: "Selesai", rec: { ringkasan: "Mahasiswa menyampaikan kesulitan membagi waktu antara kuliah, organisasi, dan istirahat. Sesi berfokus pada pemetaan prioritas mingguan.", saran: ["Susun jadwal harian dengan blok waktu belajar dan istirahat", "Coba teknik pomodoro selama 2 minggu", "Catat aktivitas harian untuk evaluasi mandiri"], tindakLanjut: "Evaluasi mandiri; konseling lanjutan dapat diajukan bila diperlukan." } },
+  { id: "RP-2385", category: "Masalah Sosial", counselor: "dr. Maya Lestari, Sp.KJ", date: "Senin, 13 Oktober", status: "Selesai", rec: { ringkasan: "Mahasiswa merasa sulit menyesuaikan diri dengan lingkungan baru di kampus. Sesi membahas cara memulai percakapan dan membangun kepercayaan diri.", saran: ["Ikut kegiatan organisasi atau komunitas kampus yang sesuai minat", "Latih memulai percakapan kecil dengan rekelas", "Jaga komunikasi dengan keluarga sebagai sumber dukungan"], tindakLanjut: "Dianjurkan melanjutkan ke sesi berikutnya dalam kategori yang sama." } },
   { id: "RP-2341", category: "Masalah Pribadi", counselor: "dr. Ratna Sari, M.Pd.Ked", date: "Jumat, 3 Oktober", status: "Ditolak" },
 ];
 
