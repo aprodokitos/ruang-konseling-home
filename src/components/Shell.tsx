@@ -48,10 +48,12 @@ export function Shell({ nav, children }: { nav: string[]; children: ReactNode })
   };
 
   const visible = items.filter((i) => nav.includes(i.label));
+  const mainItems = visible.filter((i) => i.label !== "Profil");
+  const profileItem = visible.find((i) => i.label === "Profil");
 
-  const navLinks = (mini: boolean) => (
+  const navLinks = (mini: boolean, list: NavItem[]) => (
     <nav className="flex flex-col gap-1">
-      {visible.map((item) => {
+      {list.map((item) => {
         const Icon = item.icon;
         const base = mini
           ? "group relative grid h-10 w-10 place-items-center rounded-xl transition"
@@ -122,12 +124,14 @@ export function Shell({ nav, children }: { nav: string[]; children: ReactNode })
             </button>
           )}
           {!collapsed && <div className="mt-6" />}
-          <div className={collapsed ? "mt-6" : undefined}>{navLinks(collapsed)}</div>
+          <div className={collapsed ? "mt-6" : undefined}>{navLinks(collapsed, mainItems)}</div>
         </div>
-        {!collapsed && (
-          <p className="px-3 text-[11px] leading-relaxed text-muted-foreground">
-            RuangPulih · Fakultas Kedokteran UPN "Veteran" Jakarta
-          </p>
+        {profileItem && (
+          <div className={collapsed ? "pb-1" : "mt-auto px-0"}>
+            <div className={collapsed ? "mt-4 border-t pt-4" : "border-t pt-4"}>
+              {navLinks(collapsed, [profileItem])}
+            </div>
+          </div>
         )}
       </aside>
 
@@ -147,7 +151,8 @@ export function Shell({ nav, children }: { nav: string[]; children: ReactNode })
       {/* Mobile drawer */}
       {open && (
         <div className="fixed inset-x-0 top-[57px] z-30 border-b bg-background px-5 py-4 lg:hidden">
-          {navLinks(false)}
+          {navLinks(false, mainItems)}
+          {profileItem && <div className="mt-2 border-t pt-2">{navLinks(false, [profileItem])}</div>}
         </div>
       )}
 
