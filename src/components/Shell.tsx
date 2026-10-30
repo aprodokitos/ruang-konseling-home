@@ -48,10 +48,12 @@ export function Shell({ nav, children }: { nav: string[]; children: ReactNode })
   };
 
   const visible = items.filter((i) => nav.includes(i.label));
+  const mainItems = visible.filter((i) => i.label !== "Profil");
+  const profileItem = visible.find((i) => i.label === "Profil");
 
-  const navLinks = (mini: boolean) => (
+  const navLinks = (mini: boolean, list: NavItem[]) => (
     <nav className="flex flex-col gap-1">
-      {visible.map((item) => {
+      {list.map((item) => {
         const Icon = item.icon;
         const base = mini
           ? "group relative grid h-10 w-10 place-items-center rounded-xl transition"
