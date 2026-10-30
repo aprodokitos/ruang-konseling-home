@@ -119,23 +119,19 @@ function Daftar() {
         </Step>
 
         <Step n={2} title="Kategori masalah" note="Boleh pilih lebih dari satu.">
-          <div className="space-y-5">
-            {categories.map((cat) => (
-              <fieldset key={cat.name}>
-                <legend className="text-sm font-semibold">{cat.name}</legend>
-                <div className="mt-2 grid gap-2 sm:grid-cols-2">
-                  {cat.items.map((it) => {
-                    const id = `${cat.name}:${it}`;
-                    return (
-                      <label key={id} className={`flex cursor-pointer items-start gap-2 rounded-lg border px-3 py-2 text-sm transition-colors ${checked.includes(id) ? "border-primary bg-accent" : "hover:bg-muted"}`}>
-                        <input type="checkbox" className="mt-0.5 accent-[var(--primary)]" checked={checked.includes(id)} onChange={() => toggle(id)} />
-                        {it}
-                      </label>
-                    );
-                  })}
-                </div>
-              </fieldset>
-            ))}
+          <div className="space-y-3">
+            {categories.map((cat) => {
+              const selected = checked.includes(cat.name);
+              return (
+                <label key={cat.name} className={`block cursor-pointer rounded-xl border px-4 py-3 transition-colors ${selected ? "border-primary bg-accent" : "hover:bg-muted"}`}>
+                  <span className="flex items-center gap-2.5 text-sm font-semibold">
+                    <input type="checkbox" className="accent-[var(--primary)]" checked={selected} onChange={() => toggle(cat.name)} />
+                    {cat.name}
+                  </span>
+                  <p className="mt-1.5 pl-6 text-xs leading-relaxed text-muted-foreground">Contohnya: {cat.items.join(", ")}</p>
+                </label>
+              );
+            })}
             <div>
               <label className="flex items-center gap-2 text-sm font-semibold">
                 <input type="checkbox" className="accent-[var(--primary)]" checked={useOther} onChange={(e) => setUseOther(e.target.checked)} /> Lainnya (Other)
