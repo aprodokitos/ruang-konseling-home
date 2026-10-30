@@ -1,53 +1,80 @@
 import { Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
-import { Leaf, Menu, X } from "lucide-react";
+import {
+  Leaf,
+  Menu,
+  X,
+  Home,
+  CalendarDays,
+  ClipboardList,
+  Clock,
+  User,
+  PanelLeftClose,
+  PanelLeftOpen,
+  type LucideIcon,
+} from "lucide-react";
 
-function Brand() {
+function Brand({ collapsed }: { collapsed?: boolean }) {
   return (
     <Link to="/" className="flex items-center gap-2">
-      <span className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground">
+      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground">
         <Leaf className="h-4 w-4" />
       </span>
-      <span className="font-serif text-xl">RuangPulih</span>
+      {!collapsed && <span className="font-serif text-xl">RuangPulih</span>}
     </Link>
   );
 }
 
+type NavItem = { label: string; to?: string; icon: LucideIcon };
+
+const items: NavItem[] = [
+  { label: "Beranda", to: "/", icon: Home },
+  { label: "Jadwal", to: "/jadwal", icon: CalendarDays },
+  { label: "Daftar", icon: ClipboardList },
+  { label: "Status", icon: Clock },
+  { label: "Profil", icon: User },
+];
+
 export function Shell({ nav, children }: { nav: string[]; children: ReactNode }) {
   const [open, setOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
-  const navMap: Record<string, string> = {
-    Beranda: "/",
-    Jadwal: "/jadwal",
-  };
-  const navLinks = (
+  const visible = items.filter((i) => nav.includes(i.label));
+
+  const navLinks = (mini: boolean) => (
     <nav className="flex flex-col gap-1">
-      {nav.map((n, i) => {
-        const to = navMap[n];
-        const base = "rounded-xl px-3 py-2 text-sm transition";
-        if (!to) {
+      {visible.map((item) => {
+        const Icon = item.icon;
+        const base = mini
+          ? "group relative grid h-10 w-10 place-items-center rounded-xl transition"
+          : "flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition";
+        const active = "bg-primary/10 font-semibold text-foreground";
+        const inactive = "text-muted-foreground hover:bg-muted hover:text-foreground";
+        const tooltip = mini && (
+          <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded-lg border bg-popover px-2.5 py-1.5 text-xs font-medium text-popover-foreground opacity-0 shadow-md transition-opacity group-hover:opacity-100">
+            {item.label}
+          </span>
+        );
+        if (!item.to) {
           return (
-            <span
-              key={n}
-              className={`${base} cursor-pointer ${
-                i === 0
-                  ? "bg-primary/10 font-semibold text-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
-            >
-              {n}
+            <span key={item.label} className={`${base} cursor-pointer ${inactive}`}>
+              <Icon className="h-4 w-4 shrink-0" />
+              {!mini && item.label}
+              {tooltip}
             </span>
           );
         }
         return (
           <Link
-            key={n}
-            to={to}
-            activeOptions={{ exact: to === "/" }}
-            activeProps={{ className: `${base} bg-primary/10 font-semibold text-foreground` }}
-            inactiveProps={{ className: `${base} text-muted-foreground hover:bg-muted hover:text-foreground` }}
+            key={item.label}
+            to={item.to}
+            activeOptions={{ exact: item.to === "/" }}
+            activeProps={{ className: `${base} ${active}` }}
+            inactiveProps={{ className: `${base} ${inactive}` }}
           >
-            {n}
+            <Icon className="h-4 w-4 shrink-0" />
+            {!mini && item.label}
+            {tooltip}
           </Link>
         );
       })}
@@ -56,16 +83,46 @@ export function Shell({ nav, children }: { nav: string[]; children: ReactNode })
 
   return (
     <div className="min-h-screen lg:flex">
-      {/* Sidebar (desktop) */}
-      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col justify-between border-r bg-card/60 px-5 py-6 lg:flex">
-        <div>
-          <Brand />
-          <p className="mt-6 mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">Menu</p>
-          {navLinks}
+      {/* Sidebar (desktop) — fixed di kiri, bisa diminimize */}
+      <aside
+        className={`sticky top-0 hidden h-screen shrink-0 flex-col justify-between border-r bg-card/60 py-6 transition-[width] duration-200 lg:flex ${
+          collapsed ? "w-20 items-center px-3" : "w-64 px-5"
+        }`}
+      >
+        <div className={collapsed ? "flex w-full flex-col items-center" : undefined}>
+          <div className={`flex items-center ${collapsed ? "justify-center" : "justify-between"}`}>
+            <Brand collapsed={collapsed} />
+            {!collapsed && (
+              <button
+                type="button"
+                aria-label="Minimalkan sidebar"
+                onClick={() => setCollapsed(true)}
+                className="grid h-8 w-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground"
+              >
+                <PanelLeftClose className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+          {collapsed && (
+            <button
+              type="button"
+              aria-label="Perluas sidebar"
+              onClick={() => setCollapsed(false)}
+              className="mt-3 grid h-8 w-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground"
+            >
+              <PanelLeftOpen className="h-4 w-4" />
+            </button>
+          )}
+          {!collapsed && (
+            <p className="mt-6 mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">Menu</p>
+          )}
+          <div className={collapsed ? "mt-6" : undefined}>{navLinks(collapsed)}</div>
         </div>
-        <p className="px-3 text-[11px] leading-relaxed text-muted-foreground">
-          RuangPulih · Fakultas Kedokteran UPN "Veteran" Jakarta
-        </p>
+        {!collapsed && (
+          <p className="px-3 text-[11px] leading-relaxed text-muted-foreground">
+            RuangPulih · Fakultas Kedokteran UPN "Veteran" Jakarta
+          </p>
+        )}
       </aside>
 
       {/* Mobile top bar */}
@@ -84,7 +141,7 @@ export function Shell({ nav, children }: { nav: string[]; children: ReactNode })
       {/* Mobile drawer */}
       {open && (
         <div className="fixed inset-x-0 top-[57px] z-30 border-b bg-background px-5 py-4 lg:hidden">
-          {navLinks}
+          {navLinks(false)}
         </div>
       )}
 
