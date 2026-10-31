@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Leaf,
   Menu,
@@ -25,7 +26,7 @@ function Brand({ collapsed }: { collapsed?: boolean }) {
   );
 }
 
-type NavItem = { label: string; to?: string; icon: LucideIcon };
+export type NavItem = { label: string; to?: string; icon: LucideIcon };
 
 const items: NavItem[] = [
   { label: "Beranda", to: "/", icon: Home },
@@ -35,7 +36,7 @@ const items: NavItem[] = [
   { label: "Profil", to: "/profil", icon: User },
 ];
 
-export function Shell({ nav, children }: { nav: string[]; children: ReactNode }) {
+export function Shell({ nav, children, navigationItems = items }: { nav: string[]; children: ReactNode; navigationItems?: NavItem[] }) {
   const [open, setOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
 
@@ -47,7 +48,7 @@ export function Shell({ nav, children }: { nav: string[]; children: ReactNode })
     window.localStorage.setItem("rp-sidebar", v ? "mini" : "full");
   };
 
-  const visible = items.filter((i) => nav.includes(i.label));
+  const visible = navigationItems.filter((i) => nav.includes(i.label));
   const mainItems = visible.filter((i) => i.label !== "Profil");
   const profileItem = visible.find((i) => i.label === "Profil");
 
@@ -67,11 +68,11 @@ export function Shell({ nav, children }: { nav: string[]; children: ReactNode })
         );
         if (!item.to) {
           return (
-            <span key={item.label} className={`${base} cursor-pointer ${inactive}`}>
+            <Button disabled variant="ghost" key={item.label} title="Halaman belum tersedia" className={`${base} h-auto justify-start ${inactive}`}>
               <Icon className="h-4 w-4 shrink-0" />
               {!mini && item.label}
               {tooltip}
-            </span>
+            </Button>
           );
         }
         return (

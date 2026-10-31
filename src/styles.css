@@ -69,3 +69,27 @@
   }
   h1, h2, h3 { font-family: var(--font-serif); letter-spacing: -0.02em; }
 }
+
+.counselor-portal {
+  --background: #f7f9f8;
+  --foreground: #202d27;
+  --card: #ffffff;
+  --card-foreground: #202d27;
+  --primary: #008a3e;
+  --primary-foreground: #ffffff;
+  --secondary: #e8f4ed;
+  --secondary-foreground: #176238;
+  --muted: #f0f3f1;
+  --muted-foreground: #66746b;
+  --border: #dfe6e1;
+  --input: #dfe6e1;
+  --ring: #008a3e;
+  --accent: #edf4f0;
+  --accent-foreground: #202d27;
+  background: var(--background);
+  color: var(--foreground);
+}
+.counselor-portal h1, .counselor-portal h2, .counselor-portal h3 {
+  font-family: var(--font-sans);
+  letter-spacing: 0;
+}

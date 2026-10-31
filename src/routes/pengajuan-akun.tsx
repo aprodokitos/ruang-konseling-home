@@ -9,6 +9,8 @@ export const Route = createFileRoute("/pengajuan-akun")({
       { name: "description", content: "Ajukan akun RuangPulih sebagai mahasiswa atau konselor, menunggu persetujuan Admin." },
       { property: "og:title", content: "Pengajuan Akun · RuangPulih" },
       { property: "og:description", content: "Ajukan akun RuangPulih sebagai mahasiswa atau konselor." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: PengajuanAkun,
