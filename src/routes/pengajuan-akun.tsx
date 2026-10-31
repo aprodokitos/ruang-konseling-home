@@ -104,10 +104,10 @@ function PengajuanAkun() {
                   <Field label="Program studi">
                     <select className={input} value={f.prodi} onChange={set("prodi")}>
                       <option value="">Pilih…</option>
-                      <option>S1 Kedokteran</option>
-                      <option>S1 Keperawatan</option>
-                      <option>S1 Farmasi</option>
-                      <option>S1 Gizi</option>
+                      <option>Sarjana Kedokteran</option>
+                      <option>Profesi Kedokteran</option>
+                      <option>Sarjana Farmasi</option>
+                      <option>Sarjana Biologi</option>
                     </select>
                   </Field>
                 </div>
