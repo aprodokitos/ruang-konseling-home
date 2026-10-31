@@ -139,9 +139,12 @@ function Profil() {
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               Kamu bisa keluar dari akun kapan pun. Data pengajuan yang sudah dikirim tetap tersimpan.
             </p>
-            <button className="mt-4 rounded-full border px-5 py-2.5 text-sm font-medium text-destructive transition hover:bg-destructive/10">
+            <Link
+              to="/login"
+              className="mt-4 inline-block rounded-full border border-destructive/40 px-5 py-2.5 text-sm font-medium text-destructive transition hover:bg-destructive/10"
+            >
               Keluar
-            </button>
+            </Link>
           </div>
         </div>
 
