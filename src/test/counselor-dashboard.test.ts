@@ -3,6 +3,7 @@ import { canReject, decideApplication, rejectionReasons, sampleApplications } fr
 
 describe("Counselor application decisions", () => {
   const pending = sampleApplications[0];
+  if (!pending) throw new Error("Pending fixture is required");
   it("requires one of the six PRD rejection reasons", () => {
     expect(rejectionReasons).toEqual(["Sedang Rapat", "Cuti", "Sakit", "Mengajar", "Mahasiswa Telah Mengajukan Lebih dari 2 Kali", "Lainnya"]);
     expect(canReject("", "")).toBe(false);

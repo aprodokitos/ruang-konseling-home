@@ -26,5 +26,6 @@ export function canReject(reason: string, other: string) {
 export function decideApplication(application: Application, decision: "Diterima" | "Ditolak", reason = "", other = ""): Application {
   if (application.status !== "Pending") return application;
   if (decision === "Ditolak" && !canReject(reason, other)) return application;
-  return { ...application, status: decision, reason: decision === "Ditolak" ? (reason === "Lainnya" ? other.trim() : reason) : undefined };
+  if (decision === "Diterima") return { ...application, status: decision };
+  return { ...application, status: decision, reason: reason === "Lainnya" ? other.trim() : reason };
 }

@@ -10,6 +10,8 @@ export const Route = createFileRoute("/login")({
       { name: "description", content: "Masuk ke RuangPulih menggunakan email kampus melalui Google." },
       { property: "og:title", content: "Masuk · RuangPulih" },
       { property: "og:description", content: "Masuk ke RuangPulih menggunakan email kampus melalui Google." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: LoginPage,
