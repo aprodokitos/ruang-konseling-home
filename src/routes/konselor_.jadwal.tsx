@@ -11,7 +11,7 @@ import { addAvailability, upcomingDates, removeAvailability, scheduleHours, slot
 export const Route = createFileRoute("/konselor_/jadwal")({
   head: () => ({ meta: [
     { title: "Jadwal Konseling Konselor — RuangPulih" },
-    { name: "description", content: "Kelola ketersediaan jadwal konseling RuangPulih untuk tujuh hari mendatang." },
+    { name: "description", content: "Kelola ketersediaan jadwal konseling RuangPulih Senin–Jumat untuk minggu mendatang." },
     { property: "og:title", content: "Jadwal Konseling Konselor — RuangPulih" },
     { property: "og:description", content: "Kalender mingguan ketersediaan konselor Fakultas Kedokteran UPN Veteran Jakarta." },
     { property: "og:type", content: "website" },
@@ -45,7 +45,7 @@ function CounselorSchedule() {
     setNotice(`Jadwal ${fullDate(date)}, ${hourLabel(hour)}–${hourLabel(hour + 1)} dihapus.`);
   }
   const first = dates[0];
-  const last = dates[6];
+  const last = dates[4];
 
   return (
     <div className="counselor-portal">
@@ -62,14 +62,14 @@ function CounselorSchedule() {
             <div className="flex items-center gap-5 text-xs"><span className="flex items-center gap-2"><span className="size-2 rounded-full bg-primary" />{slots.length} slot tersedia</span><span className="flex items-center gap-2 text-muted-foreground"><Clock3 className="size-4" />60 menit / sesi</span></div>
           </div>
           <div role="status" aria-live="polite" className="mt-4 min-h-5 text-xs text-primary">{notice}</div>
-          <div className="mt-3 overflow-x-auto rounded-lg border bg-card" aria-label="Kalender ketersediaan tujuh hari mendatang">
-            <div className="min-w-[840px]">
-              <div className="grid grid-cols-[64px_repeat(7,minmax(0,1fr))] border-b">
+          <div className="mt-3 overflow-x-auto rounded-lg border bg-card" aria-label="Kalender ketersediaan Senin–Jumat minggu mendatang">
+            <div className="min-w-[680px]">
+              <div className="grid grid-cols-[64px_repeat(5,minmax(0,1fr))] border-b">
                 <div className="flex items-center justify-center text-[10px] text-muted-foreground">GMT+7</div>
                 {dates.map((date) => <div key={format(date, "yyyy-MM-dd")} className="border-l px-2 py-4 text-center"><p className="text-xs text-muted-foreground">{format(date, "EEE", { locale: indonesian })}</p><p className="mt-1 text-2xl font-semibold tabular-nums">{format(date, "d")}</p></div>)}
               </div>
               {dates.length === 0 ? <div className="h-[630px] animate-pulse bg-muted/30" /> : scheduleHours.map((hour) => (
-                <div key={hour} className="grid h-[76px] grid-cols-[64px_repeat(7,minmax(0,1fr))]">
+                <div key={hour} className="grid h-[76px] grid-cols-[64px_repeat(5,minmax(0,1fr))]">
                   <div className="border-b pt-2 text-center text-[11px] tabular-nums text-muted-foreground">{hourLabel(hour)}</div>
                   {dates.map((date) => {
                     const dateLabel = fullDate(date);

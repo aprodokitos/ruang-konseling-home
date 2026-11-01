@@ -184,6 +184,7 @@ const tone: Record<string, string> = {
   Berlangsung: "bg-primary text-primary-foreground",
   Selesai: "bg-muted text-muted-foreground",
   Ditolak: "bg-destructive/15 text-destructive",
+  Dibatalkan: "bg-destructive/15 text-destructive",
 };
 export function Badge({ s }: { s: string }) {
   return <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${tone[s] ?? "bg-muted"}`}>{s}</span>;

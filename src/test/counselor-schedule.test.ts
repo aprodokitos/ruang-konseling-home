@@ -6,10 +6,19 @@ describe("Counselor weekly availability", () => {
   const today = new Date(2026, 10, 1, 13, 52);
   const chosen = new Date(2026, 10, 2);
 
-  it("shows exactly seven upcoming dates", () => {
+  it("shows only Monday–Friday in the upcoming week", () => {
     expect(upcomingDates(today).map((date) => format(date, "yyyy-MM-dd"))).toEqual([
-      "2026-11-02", "2026-11-03", "2026-11-04", "2026-11-05", "2026-11-06", "2026-11-07", "2026-11-08",
+      "2026-11-02", "2026-11-03", "2026-11-04", "2026-11-05", "2026-11-06",
     ]);
+  });
+  it("keeps a Monday–Friday week when opened midweek", () => {
+    expect(upcomingDates(new Date(2026, 10, 4)).map((date) => format(date, "yyyy-MM-dd"))).toEqual([
+      "2026-11-09", "2026-11-10", "2026-11-11", "2026-11-12", "2026-11-13",
+    ]);
+  });
+  it("does not create availability on Saturday or Sunday", () => {
+    expect(addAvailability([], new Date(2026, 10, 7), 10)).toEqual([]);
+    expect(addAvailability([], new Date(2026, 10, 8), 10)).toEqual([]);
   });
   it("adds availability at the selected date and hour without duplicates", () => {
     const slots = addAvailability([], chosen, 10);
