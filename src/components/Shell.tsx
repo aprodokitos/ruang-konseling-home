@@ -79,7 +79,7 @@ export function Shell({ nav, children, navigationItems = items }: { nav: string[
           <Link
             key={item.label}
             to={item.to}
-            activeOptions={{ exact: item.to === "/" }}
+            activeOptions={{ exact: item.to === "/" || item.to === "/konselor" }}
             activeProps={{ className: `${base} ${active}` }}
             inactiveProps={{ className: `${base} ${inactive}` }}
           >

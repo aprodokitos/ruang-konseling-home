@@ -12,3 +12,5 @@
 - Counselor dashboard UI uses a browser-safe sample-data/decision module and component-local state; it remains a design prototype without real account or persistence behavior.
 - Shell accepts optional role-specific navigation items so counselor menus cannot accidentally link to student pages; unimplemented counselor pages stay disabled.
 - Counselor portal theme is scoped in global CSS to follow its PRD without changing the existing student portal design.
+- Counselor pages share a role-specific navigation module; secondary pages use un-nested route files so they do not render inside the dashboard.
+- Counselor availability uses a browser-safe date/slot module and component-local demo state, keeping schedule interactions consistent without implying saved availability.
