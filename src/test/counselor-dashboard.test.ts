@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canReject, decideApplication, rejectionReasons, sampleApplications } from "@/lib/counselor-dashboard";
+import { cancelApplication, canReject, decideApplication, rejectionReasons, sampleApplications, type CounselingStatus } from "@/lib/counselor-dashboard";
 
 describe("Counselor application decisions", () => {
   const pending = sampleApplications[0];
@@ -26,5 +26,26 @@ describe("Counselor application decisions", () => {
   it("only changes pending applications", () => {
     const accepted = { ...pending, status: "Diterima" as const };
     expect(decideApplication(accepted, "Ditolak", "Sakit")).toBe(accepted);
+  });
+  it("allows cancellation of accepted applications with the same six reasons", () => {
+    const accepted = { ...pending, status: "Diterima" as const };
+    for (const reason of rejectionReasons) {
+      expect(cancelApplication(accepted, reason, "Kegiatan fakultas")).toMatchObject({
+        status: "Dibatalkan", reason: reason === "Lainnya" ? "Kegiatan fakultas" : reason,
+      });
+    }
+  });
+  it("requires a valid cancellation reason and explanation for Lainnya", () => {
+    const accepted = { ...pending, status: "Diterima" as const };
+    expect(cancelApplication(accepted)).toBe(accepted);
+    expect(cancelApplication(accepted, "Tidak valid")).toBe(accepted);
+    expect(cancelApplication(accepted, "Lainnya", " ")).toBe(accepted);
+  });
+  it("cannot cancel sessions that have started or applications not accepted", () => {
+    const statuses: CounselingStatus[] = ["Pending", "Berlangsung", "Selesai", "Ditolak", "Dibatalkan"];
+    for (const status of statuses) {
+      const application = { ...pending, status };
+      expect(cancelApplication(application, "Sakit")).toBe(application);
+    }
   });
 });
