@@ -5,7 +5,7 @@ import { Shell, Badge } from "@/components/Shell";
 import { counselorNavigation as navigation } from "@/lib/counselor-navigation";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { canReject, decideApplication, rejectionReasons, sampleApplications, type CounselingStatus } from "@/lib/counselor-dashboard";
+import { cancelApplication, canReject, decideApplication, rejectionReasons, sampleApplications, type CounselingStatus } from "@/lib/counselor-dashboard";
 import counselingImage from "@/assets/hero.jpg";
 
 export const Route = createFileRoute("/konselor")({
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/konselor")({
   component: CounselorDashboard,
 });
 
-const filters = ["Semua", "Pending", "Diterima", "Berlangsung", "Selesai", "Ditolak"] as const;
+const filters = ["Semua", "Pending", "Diterima", "Berlangsung", "Selesai", "Ditolak", "Dibatalkan"] as const;
 type Filter = typeof filters[number];
 
 function CounselorDashboard() {
@@ -32,6 +32,7 @@ function CounselorDashboard() {
   const [other, setOther] = useState("");
   const [notice, setNotice] = useState("");
   const selected = applications.find((item) => item.id === selectedId);
+  const cancelling = selected?.status === "Diterima";
   const visible = applications.filter((item) => (filter === "Semua" || item.status === filter) && `${item.name} ${item.nim} ${item.category}`.toLowerCase().includes(search.toLowerCase()));
   const count = (status: CounselingStatus) => applications.filter((item) => item.status === status).length;
   const stats = [
@@ -43,12 +44,14 @@ function CounselorDashboard() {
   function openDetail(id: string) {
     setSelectedId(id); setRejecting(false); setReason(""); setOther("");
   }
-  function decide(decision: "Diterima" | "Ditolak") {
-    if (!selected || selected.status !== "Pending") return;
-    const updated = decideApplication(selected, decision, reason, other);
+  function decide(decision: "Diterima" | "Ditolak" | "Dibatalkan") {
+    if (!selected) return;
+    const updated = decision === "Dibatalkan"
+      ? cancelApplication(selected, reason, other)
+      : decideApplication(selected, decision, reason, other);
     if (updated === selected) return;
     setApplications((items) => items.map((item) => item.id === selected.id ? updated : item));
-    setNotice(`Pengajuan ${selected.name} ${decision === "Diterima" ? "diterima" : "ditolak"}.`);
+    setNotice(`Pengajuan ${selected.name} ${decision === "Diterima" ? "diterima" : decision === "Dibatalkan" ? "dibatalkan" : "ditolak"}.`);
     setSelectedId(null);
   }
   return (
@@ -100,11 +103,23 @@ function CounselorDashboard() {
       <Dialog open={Boolean(selected)} onOpenChange={(open) => { if (!open) setSelectedId(null); }}>
         <DialogContent className="counselor-portal max-h-[90dvh] w-[calc(100%-2rem)] overflow-y-auto rounded-lg">
           {selected && <>
-            <DialogHeader><DialogTitle>{rejecting ? "Tolak pengajuan" : "Detail pengajuan konseling"}</DialogTitle><DialogDescription>{selected.name} · {selected.nim}</DialogDescription></DialogHeader>
+            <DialogHeader><DialogTitle>{rejecting ? (cancelling ? "Batalkan pengajuan" : "Tolak pengajuan") : "Detail pengajuan konseling"}</DialogTitle><DialogDescription>{selected.name} · {selected.nim}</DialogDescription></DialogHeader>
             <div className="flex items-center justify-between border-b pb-3"><span className="text-sm font-semibold">Informasi mahasiswa</span><Badge s={selected.status} /></div>
             <dl className="grid gap-3 text-sm">{[["Nama lengkap", selected.name], ["NIM", selected.nim], ["Program studi", selected.program], ["Nomor HP", selected.contact], ["Kategori masalah", selected.category], ["Jadwal konseling", selected.schedule], ["Urutan pengajuan", `Pengajuan ke-${selected.order} untuk kategori ${selected.category}`]].map(([label, value]) => <div key={label} className="grid gap-1 sm:grid-cols-[140px_1fr]"><dt className="text-xs text-muted-foreground">{label}</dt><dd className="break-words text-sm font-medium">{value}</dd></div>)}</dl>
-            {selected.status === "Ditolak" && <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive"><p className="font-semibold">Alasan penolakan</p><p className="mt-1">{selected.reason}</p></div>}
-            {selected.status === "Pending" && (rejecting ? <div className="space-y-3 border-t pt-4"><label className="block text-sm font-medium" htmlFor="rejection-reason">Alasan penolakan <span className="text-destructive">*</span></label><select id="rejection-reason" value={reason} onChange={(event) => setReason(event.target.value)} className="h-10 w-full rounded-md border bg-card px-3 text-sm"><option value="">Pilih alasan</option>{rejectionReasons.map((item) => <option key={item}>{item}</option>)}</select>{reason === "Lainnya" && <div><label className="text-xs font-medium" htmlFor="other-reason">Keterangan alasan</label><textarea id="other-reason" rows={3} value={other} onChange={(event) => setOther(event.target.value)} placeholder="Tuliskan alasan penolakan…" className="mt-2 w-full rounded-md border bg-card p-3 text-sm" /></div>}<div className="flex justify-end gap-2"><Button variant="outline" onClick={() => setRejecting(false)}>Kembali</Button><Button variant="destructive" disabled={!canReject(reason, other)} onClick={() => decide("Ditolak")}>Konfirmasi penolakan</Button></div></div> : <div className="flex justify-end gap-2 border-t pt-4"><Button variant="outline" className="text-destructive" onClick={() => setRejecting(true)}><X />Tolak</Button><Button onClick={() => decide("Diterima")}><Check />Terima pengajuan</Button></div>)}
+            {(selected.status === "Ditolak" || selected.status === "Dibatalkan") && <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive"><p className="font-semibold">{selected.status === "Dibatalkan" ? "Alasan pembatalan" : "Alasan penolakan"}</p><p className="mt-1">{selected.reason}</p></div>}
+            {(selected.status === "Pending" || cancelling) && (rejecting ? (
+              <div className="space-y-3 border-t pt-4">
+                <label className="block text-sm font-medium" htmlFor="rejection-reason">{cancelling ? "Alasan pembatalan" : "Alasan penolakan"} <span className="text-destructive">*</span></label>
+                <select id="rejection-reason" value={reason} onChange={(event) => setReason(event.target.value)} className="h-10 w-full rounded-md border bg-card px-3 text-sm"><option value="">Pilih alasan</option>{rejectionReasons.map((item) => <option key={item}>{item}</option>)}</select>
+                {reason === "Lainnya" && <div><label className="text-xs font-medium" htmlFor="other-reason">Keterangan alasan</label><textarea id="other-reason" rows={3} value={other} onChange={(event) => setOther(event.target.value)} placeholder={cancelling ? "Tuliskan alasan pembatalan…" : "Tuliskan alasan penolakan…"} className="mt-2 w-full rounded-md border bg-card p-3 text-sm" /></div>}
+                <div className="flex flex-wrap justify-end gap-2"><Button variant="outline" onClick={() => setRejecting(false)}>Kembali</Button><Button variant="destructive" disabled={!canReject(reason, other)} onClick={() => decide(cancelling ? "Dibatalkan" : "Ditolak")}>{cancelling ? "Konfirmasi pembatalan" : "Konfirmasi penolakan"}</Button></div>
+              </div>
+            ) : (
+              <div className="flex flex-wrap justify-end gap-2 border-t pt-4">
+                <Button variant="outline" className="text-destructive" onClick={() => setRejecting(true)}><X />{cancelling ? "Batalkan pengajuan" : "Tolak"}</Button>
+                {!cancelling && <Button onClick={() => decide("Diterima")}><Check />Terima pengajuan</Button>}
+              </div>
+            ))}
           </>}
         </DialogContent>
       </Dialog>
