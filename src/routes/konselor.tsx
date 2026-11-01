@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowUpRight, BookOpen, CalendarDays, Check, CheckCircle2, ChevronRight, ClipboardList, Clock3, Download, LayoutDashboard, Search, ShieldCheck, User, Users, Video, X } from "lucide-react";
-import { Shell, Badge, type NavItem } from "@/components/Shell";
+import { ArrowUpRight, BookOpen, CalendarDays, Check, CheckCircle2, ChevronRight, Clock3, Download, Search, ShieldCheck, Users, Video, X } from "lucide-react";
+import { Shell, Badge } from "@/components/Shell";
+import { counselorNavigation as navigation } from "@/lib/counselor-navigation";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { canReject, decideApplication, rejectionReasons, sampleApplications, type CounselingStatus } from "@/lib/counselor-dashboard";
@@ -18,12 +19,6 @@ export const Route = createFileRoute("/konselor")({
   component: CounselorDashboard,
 });
 
-const navigation: NavItem[] = [
-  { label: "Dashboard", to: "/konselor", icon: LayoutDashboard },
-  { label: "Jadwal Konseling", icon: CalendarDays },
-  { label: "Sesi Konseling", icon: ClipboardList },
-  { label: "Profil", icon: User },
-];
 const filters = ["Semua", "Pending", "Diterima", "Berlangsung", "Selesai", "Ditolak"] as const;
 type Filter = typeof filters[number];
 
