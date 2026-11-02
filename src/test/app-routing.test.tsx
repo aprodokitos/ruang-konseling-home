@@ -20,4 +20,10 @@ describe("App routing", () => {
     expect(matches.at(-1)?.routeId).toBe("/konselor_/jadwal");
     expect(matches.some((match) => match.routeId === "/konselor")).toBe(false);
   });
+  it("matches counselor sessions as an independent page", () => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+    const matches = router.matchRoutes("/konselor/sesi");
+    expect(matches.at(-1)?.routeId).toBe("/konselor_/sesi");
+    expect(matches.some((match) => match.routeId === "/konselor")).toBe(false);
+  });
 });

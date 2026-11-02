@@ -4,6 +4,6 @@ import type { NavItem } from "@/components/Shell";
 export const counselorNavigation: NavItem[] = [
   { label: "Dashboard", to: "/konselor", icon: LayoutDashboard },
   { label: "Jadwal Konseling", to: "/konselor/jadwal", icon: CalendarDays },
-  { label: "Sesi Konseling", icon: ClipboardList },
+  { label: "Sesi Konseling", to: "/konselor/sesi", icon: ClipboardList },
   { label: "Profil", icon: User },
 ];
