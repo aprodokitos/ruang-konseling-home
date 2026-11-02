@@ -6,5 +6,5 @@
 - [x] Restrict upcoming weekly schedule to Monday–Friday.
 - [x] Allow counselors to cancel accepted applications with rejection reasons before sessions begin.
 - [x] Test weekday restrictions and cancellation flow.
-- [ ] Build counselor session list and session workspace following the PRD.
-- [ ] Verify timer, session notes, photo documentation and completion interactions.
+- [x] Build counselor session list and session workspace following the PRD.
+- [x] Verify timer, session notes, photo documentation and completion interactions.
