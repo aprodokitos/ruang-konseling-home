@@ -1,11 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { BadgeCheck, ChevronRight, KeyRound, LogOut, Mail, Phone, Pencil, ShieldCheck, User } from "lucide-react";
+import { BadgeCheck, CheckCircle2, ChevronRight, KeyRound, LogOut, Pencil, ShieldCheck, User } from "lucide-react";
 import { Shell } from "@/components/Shell";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { counselorNavigation } from "@/lib/counselor-navigation";
 
 export const Route = createFileRoute("/konselor_/profil")({
@@ -28,86 +25,114 @@ const initialProfile = {
   expertise: "Kesehatan mental mahasiswa, manajemen stres, konseling karier",
 };
 
+const fields: { key: keyof typeof initialProfile; label: string; editable: boolean }[] = [
+  { key: "name", label: "Nama lengkap & gelar", editable: true },
+  { key: "email", label: "Email kampus (login Google)", editable: false },
+  { key: "phone", label: "Nomor telepon", editable: true },
+  { key: "category", label: "Kategori konselor", editable: false },
+  { key: "expertise", label: "Bidang keahlian", editable: true },
+];
+
 function CounselorProfile() {
   const [editing, setEditing] = useState(false);
   const [profile, setProfile] = useState(initialProfile);
   const [draft, setDraft] = useState(initialProfile);
-  const [notice, setNotice] = useState("");
+  const [saved, setSaved] = useState(false);
 
-  function startEdit() { setDraft(profile); setEditing(true); setNotice(""); }
-  function cancelEdit() { setDraft(profile); setEditing(false); }
+  function startEdit() { setDraft(profile); setEditing(true); setSaved(false); }
   function saveEdit() {
-    setProfile(draft);
+    setProfile({ ...draft, name: draft.name.trim() || initialProfile.name });
     setEditing(false);
-    setNotice("Perubahan data diri tersimpan (contoh tampilan, belum tersimpan ke server).");
+    setSaved(true);
   }
+
+  const initials = profile.name.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase();
 
   return (
     <div className="counselor-portal">
       <Shell nav={counselorNavigation.map((item) => item.label)} navigationItems={counselorNavigation}>
         <div className="border-b bg-card px-5 py-4 lg:px-9">
-          <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3">
+          <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3">
             <p className="text-xs text-muted-foreground sm:text-sm">Portal Konselor <ChevronRight className="mx-2 inline size-3" /><span className="font-medium text-foreground">Profil</span></p>
-            <div className="flex items-center gap-3"><span className="grid size-9 place-items-center rounded-full bg-secondary text-xs font-semibold text-secondary-foreground">AP</span><div><p className="text-xs font-semibold">{profile.name}</p><p className="text-xs text-muted-foreground">{profile.category}</p></div></div>
+            <div className="flex items-center gap-3"><span className="grid size-9 place-items-center rounded-full bg-secondary text-xs font-semibold text-secondary-foreground">{initials}</span><div><p className="text-xs font-semibold">{profile.name}</p><p className="text-xs text-muted-foreground">{profile.category}</p></div></div>
           </div>
         </div>
 
-        <section className="mx-auto max-w-5xl px-5 py-8 lg:px-9">
+        <section className="mx-auto max-w-3xl px-5 py-8 lg:px-9">
           <p className="text-xs font-semibold uppercase tracking-widest text-primary">Akun konselor</p>
           <h1 className="mt-2 text-3xl font-semibold">Profil</h1>
-          <p className="mt-3 max-w-2xl text-sm text-muted-foreground">Data ini tampil ke mahasiswa saat mereka memilih konselor dan jadwal konseling.</p>
+          <p className="mt-3 max-w-lg text-sm text-muted-foreground">Data ini tampil ke mahasiswa saat mereka memilih konselor dan jadwal konseling. Pastikan semuanya sudah benar.</p>
 
-          <div role="status" aria-live="polite" className="mt-4 min-h-5 text-xs text-primary">{notice}</div>
-
-          <div className="mt-4 grid gap-5 lg:grid-cols-[1.6fr_1fr]">
-            <div className="rounded-lg border bg-card p-6">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <span className="grid size-14 place-items-center rounded-full bg-secondary text-lg font-semibold text-secondary-foreground"><User className="size-6" /></span>
-                  <div>
-                    <p className="text-lg font-semibold">{profile.name}</p>
-                    <div className="mt-1 flex flex-wrap items-center gap-2">
-                      <Badge variant="secondary"><BadgeCheck />{profile.category}</Badge>
-                      <Badge variant="outline">Akun aktif</Badge>
-                    </div>
+          <div className="mt-8 rounded-3xl border bg-card p-6 md:p-8">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <span className="grid size-16 place-items-center rounded-full bg-secondary text-2xl font-semibold text-secondary-foreground">{initials || <User className="size-6" />}</span>
+                <div>
+                  <p className="text-2xl font-semibold">{profile.name}</p>
+                  <div className="mt-1 flex flex-wrap items-center gap-2">
+                    <Badge variant="secondary"><BadgeCheck />{profile.category}</Badge>
+                    <Badge variant="outline">Akun aktif</Badge>
                   </div>
                 </div>
-                {!editing && <Button variant="outline" size="sm" onClick={startEdit}><Pencil />Ubah data</Button>}
               </div>
-
-              {editing ? (
-                <div className="mt-6 space-y-4">
-                  <div className="space-y-2"><Label htmlFor="nama">Nama lengkap & gelar</Label><Input id="nama" value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} /></div>
-                  <div className="space-y-2"><Label htmlFor="telepon">Nomor telepon</Label><Input id="telepon" value={draft.phone} onChange={(e) => setDraft({ ...draft, phone: e.target.value })} /></div>
-                  <div className="space-y-2"><Label htmlFor="keahlian">Bidang keahlian</Label><Input id="keahlian" value={draft.expertise} onChange={(e) => setDraft({ ...draft, expertise: e.target.value })} /></div>
-                  <div className="flex gap-3 pt-2">
-                    <Button onClick={saveEdit} disabled={!draft.name.trim() || !draft.phone.trim() || !draft.expertise.trim()}>Simpan perubahan</Button>
-                    <Button variant="outline" onClick={cancelEdit}>Batal</Button>
-                  </div>
-                </div>
-              ) : (
-                <dl className="mt-6 space-y-4 text-sm">
-                  <div className="flex items-start gap-3"><Mail className="mt-0.5 size-4 text-muted-foreground" /><div><dt className="text-xs text-muted-foreground">Email kampus (login Google)</dt><dd className="font-medium">{profile.email}</dd></div></div>
-                  <div className="flex items-start gap-3"><Phone className="mt-0.5 size-4 text-muted-foreground" /><div><dt className="text-xs text-muted-foreground">Nomor telepon</dt><dd className="font-medium">{profile.phone}</dd></div></div>
-                  <div className="flex items-start gap-3"><BadgeCheck className="mt-0.5 size-4 text-muted-foreground" /><div><dt className="text-xs text-muted-foreground">Bidang keahlian</dt><dd className="font-medium">{profile.expertise}</dd></div></div>
-                </dl>
+              {!editing && (
+                <button onClick={startEdit} className="inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-medium transition hover:bg-muted">
+                  <Pencil className="size-4" /> Ubah data
+                </button>
               )}
             </div>
 
-            <div className="space-y-5">
-              <div className="rounded-lg border bg-card p-6">
-                <div className="flex items-center gap-2"><ShieldCheck className="size-4 text-primary" /><h2 className="text-sm font-semibold">Kerahasiaan data</h2></div>
-                <p className="mt-3 text-xs leading-relaxed text-muted-foreground">Catatan sesi dan data mahasiswa bersifat rahasia. Hanya kamu dan Admin yang dapat mengaksesnya sesuai ketentuan layanan RuangPulih.</p>
+            {!editing ? (
+              <dl className="mt-8 grid gap-3 sm:grid-cols-2">
+                {fields.map((f) => (
+                  <div key={f.key} className={f.key === "expertise" ? "rounded-xl bg-muted px-4 py-3 sm:col-span-2" : "rounded-xl bg-muted px-4 py-3"}>
+                    <dt className="text-xs text-muted-foreground">{f.label}</dt>
+                    <dd className="mt-0.5 font-medium">{profile[f.key]}</dd>
+                  </div>
+                ))}
+              </dl>
+            ) : (
+              <div className="mt-8">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {fields.map((f) => (
+                    <label key={f.key} className={f.key === "expertise" ? "block text-sm sm:col-span-2" : "block text-sm"}>
+                      <span className="mb-1.5 block text-xs font-medium text-muted-foreground">{f.label}{!f.editable && " (tidak bisa diubah)"}</span>
+                      <input
+                        value={draft[f.key]}
+                        disabled={!f.editable}
+                        onChange={(e) => setDraft({ ...draft, [f.key]: e.target.value })}
+                        className="w-full rounded-lg border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
+                      />
+                    </label>
+                  ))}
+                </div>
+                <div className="mt-6 flex items-center justify-end gap-3">
+                  <button onClick={() => setEditing(false)} className="rounded-full px-5 py-2.5 text-sm font-medium text-muted-foreground transition hover:bg-muted">Batal</button>
+                  <button onClick={saveEdit} disabled={!draft.name.trim() || !draft.phone.trim() || !draft.expertise.trim()} className="rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground disabled:opacity-50">Simpan perubahan</button>
+                </div>
               </div>
-              <div className="rounded-lg border bg-card p-6">
-                <div className="flex items-center gap-2"><KeyRound className="size-4 text-primary" /><h2 className="text-sm font-semibold">Keamanan akun</h2></div>
-                <p className="mt-3 text-xs leading-relaxed text-muted-foreground">Login menggunakan akun Google kampus. Kata sandi dikelola oleh Google, bukan oleh RuangPulih.</p>
-              </div>
-              <div className="rounded-lg border bg-card p-6">
-                <h2 className="text-sm font-semibold">Keluar akun</h2>
-                <p className="mt-3 text-xs leading-relaxed text-muted-foreground">Akhiri sesi konselor kamu di perangkat ini.</p>
-                <Button variant="outline" className="mt-4 w-full" asChild><a href="/login"><LogOut />Keluar</a></Button>
-              </div>
+            )}
+
+            {saved && !editing && (
+              <p className="mt-6 flex items-center gap-2 text-sm text-primary">
+                <CheckCircle2 className="size-4" /> Perubahan berhasil disimpan (contoh tampilan, belum tersimpan ke server).
+              </p>
+            )}
+          </div>
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-3">
+            <div className="rounded-2xl border bg-card p-6">
+              <p className="flex items-center gap-2 font-semibold"><ShieldCheck className="size-4 text-primary" /> Kerahasiaan data</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Catatan sesi dan data mahasiswa bersifat rahasia sesuai ketentuan layanan RuangPulih.</p>
+            </div>
+            <div className="rounded-2xl border bg-card p-6">
+              <p className="flex items-center gap-2 font-semibold"><KeyRound className="size-4 text-primary" /> Keamanan akun</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Login memakai akun Google kampus. Kata sandi dikelola Google, bukan RuangPulih.</p>
+            </div>
+            <div className="rounded-2xl border bg-card p-6">
+              <p className="flex items-center gap-2 font-semibold"><LogOut className="size-4 text-primary" /> Keluar akun</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Akhiri sesi konselor kamu di perangkat ini.</p>
+              <a href="/login" className="mt-4 inline-block rounded-full border border-destructive/40 px-5 py-2.5 text-sm font-medium text-destructive transition hover:bg-destructive/10">Keluar</a>
             </div>
           </div>
         </section>
