@@ -187,7 +187,7 @@ function AdminStudents() {
                   <li key={qq}>
                     <p className="text-sm"><span className="text-muted-foreground">{i + 1}.</span> {qq}</p>
                     <div className="mt-1 flex h-3 overflow-hidden rounded-full">
-                      {dist[i].map((v, j) => <div key={j} className={scaleTone[j]} style={{ width: `${v}%` }} title={`${scale[j]}: ${v}%`} />)}
+                      {(dist[i] ?? []).map((v, j) => <div key={j} className={scaleTone[j]} style={{ width: `${v}%` }} title={`${scale[j]}: ${v}%`} />)}
                     </div>
                   </li>
                 ))}
