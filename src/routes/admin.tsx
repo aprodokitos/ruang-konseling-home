@@ -216,6 +216,7 @@ function AdminStudents() {
                   <span><span className="text-xs text-muted-foreground">Kendala: </span>{f.kendala}</span>
                   <span><span className="text-xs text-muted-foreground">Saran: </span>{f.saran}</span>
                 </li>
+              ))}
             </ul>
           </div>
 
