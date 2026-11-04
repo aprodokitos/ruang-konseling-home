@@ -218,7 +218,12 @@ function AdminStudents() {
                 </li>
               ))}
             </ul>
-            <div className="mt-5 border-t pt-4">
+          </div>
+
+          <div className="mt-4 rounded-2xl border bg-card p-6">
+            <h3 className="text-base font-semibold">Laporan Tahunan</h3>
+            <p className="mt-1 text-xs text-muted-foreground">Rekapitulasi pengajuan, distribusi data, dan survei kepuasan selama setahun.</p>
+            <div className="mt-4">
               <button type="button" className="inline-flex items-center gap-2 rounded-full border bg-background px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-secondary">
                 <Download className="size-4" />Unduh laporan tahunan
               </button>
