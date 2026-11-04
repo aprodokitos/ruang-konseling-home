@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Search, Star, MessageSquareText } from "lucide-react";
+import { Search, Star, MessageSquareText, Download } from "lucide-react";
 import { Shell } from "@/components/Shell";
 import { adminNavigation } from "@/lib/admin-navigation";
 
@@ -123,7 +123,7 @@ function AdminStudents() {
           </div>
 
           <div className="mt-10 flex flex-wrap items-end justify-between gap-3">
-            <h2 className="text-lg font-semibold">Data mahasiswa</h2>
+            <h2 className="text-lg font-semibold">Data Mahasiswa</h2>
             <div className="flex flex-wrap gap-2">
               <label className="relative">
                 <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -137,7 +137,7 @@ function AdminStudents() {
           <div className="mt-4 overflow-x-auto rounded-2xl border bg-card">
             <table className="w-full min-w-[860px] text-sm">
               <thead className="bg-muted/60 text-left text-xs uppercase tracking-wider text-muted-foreground">
-                <tr>{["Nama lengkap", "NIM", "Program studi", "Kategori", "Tanggal", "Status", "Konselor"].map((h) => <th key={h} className="px-4 py-3 font-medium">{h}</th>)}</tr>
+                <tr>{["Nama lengkap", "NIM", "Program studi", "Kategori", "Tanggal", "Status", "Konselor", "Laporan"].map((h) => <th key={h} className="px-4 py-3 font-medium">{h}</th>)}</tr>
               </thead>
               <tbody>
                 {rows.map((s) => (
@@ -149,9 +149,14 @@ function AdminStudents() {
                     <td className="px-4 py-3 text-muted-foreground">{s.date}</td>
                     <td className="px-4 py-3"><span className={`rounded-full px-2.5 py-1 text-xs font-medium ${tone[s.status]}`}>{s.status}</span></td>
                     <td className="px-4 py-3">{s.counselor}</td>
+                    <td className="px-4 py-3">
+                      <button type="button" className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-secondary">
+                        <Download className="size-3.5" />Unduh
+                      </button>
+                    </td>
                   </tr>
                 ))}
-                {rows.length === 0 && <tr><td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">Tidak ada data yang cocok.</td></tr>}
+                {rows.length === 0 && <tr><td colSpan={8} className="px-4 py-8 text-center text-muted-foreground">Tidak ada data yang cocok.</td></tr>}
               </tbody>
             </table>
           </div>
@@ -198,7 +203,7 @@ function AdminStudents() {
 
           <div className="mt-4 rounded-2xl border bg-card p-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h3 className="flex items-center gap-2 text-base font-semibold"><MessageSquareText className="size-4 text-primary" />Kendala & saran mahasiswa</h3>
+              <h3 className="flex items-center gap-2 text-base font-semibold"><MessageSquareText className="size-4 text-primary" />Kendala & Saran Mahasiswa</h3>
               <select value={period} onChange={(e) => setPeriod(e.target.value)} className="h-9 rounded-full border bg-background px-4 text-sm">
                 {["Semua", "Nov 2026", "Okt 2026", "Sep 2026"].map((p) => <option key={p}>{p}</option>)}
               </select>
@@ -213,6 +218,11 @@ function AdminStudents() {
                 </li>
               ))}
             </ul>
+            <div className="mt-5 border-t pt-4">
+              <button type="button" className="inline-flex items-center gap-2 rounded-full border bg-background px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-secondary">
+                <Download className="size-4" />Unduh laporan tahunan
+              </button>
+            </div>
           </div>
         </section>
       </Shell>
