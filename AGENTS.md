@@ -15,3 +15,4 @@
 - Counselor pages share a role-specific navigation module; secondary pages use un-nested route files so they do not render inside the dashboard.
 - Counselor availability uses a browser-safe date/slot module and component-local demo state, keeping schedule interactions consistent without implying saved availability.
 - Counselor sessions use a browser-safe timing/validation module and component-local records with in-memory photo previews; the UI prototype does not persist sensitive notes or simulate real server-recorded session timing.
+- Admin analytics pages share admin-specific navigation and use independent un-nested routes with browser-safe sample data; they remain UI prototypes without account access or persisted records.
