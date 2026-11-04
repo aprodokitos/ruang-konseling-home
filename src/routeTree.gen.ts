@@ -19,6 +19,7 @@ import { Route as PengajuanAkunRouteImport } from './routes/pengajuan-akun'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as StatusRouteImport } from './routes/status'
 import { Route as SurveiRouteImport } from './routes/survei'
+import { Route as AdminKonselorRouteImport } from './routes/admin_.konselor'
 import { Route as KonselorJadwalRouteImport } from './routes/konselor_.jadwal'
 import { Route as KonselorProfilRouteImport } from './routes/konselor_.profil'
 import { Route as KonselorSesiRouteImport } from './routes/konselor_.sesi'
@@ -73,6 +74,11 @@ const SurveiRoute = SurveiRouteImport.update({
   path: '/survei',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminKonselorRoute = AdminKonselorRouteImport.update({
+  id: '/admin_/konselor',
+  path: '/admin/konselor',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const KonselorJadwalRoute = KonselorJadwalRouteImport.update({
   id: '/konselor_/jadwal',
   path: '/konselor/jadwal',
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/profil': typeof ProfilRoute
   '/status': typeof StatusRoute
   '/survei': typeof SurveiRoute
+  '/admin/konselor': typeof AdminKonselorRoute
   '/konselor/jadwal': typeof KonselorJadwalRoute
   '/konselor/profil': typeof KonselorProfilRoute
   '/konselor/sesi': typeof KonselorSesiRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/profil': typeof ProfilRoute
   '/status': typeof StatusRoute
   '/survei': typeof SurveiRoute
+  '/admin/konselor': typeof AdminKonselorRoute
   '/konselor/jadwal': typeof KonselorJadwalRoute
   '/konselor/profil': typeof KonselorProfilRoute
   '/konselor/sesi': typeof KonselorSesiRoute
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/profil': typeof ProfilRoute
   '/status': typeof StatusRoute
   '/survei': typeof SurveiRoute
+  '/admin_/konselor': typeof AdminKonselorRoute
   '/konselor_/jadwal': typeof KonselorJadwalRoute
   '/konselor_/profil': typeof KonselorProfilRoute
   '/konselor_/sesi': typeof KonselorSesiRoute
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
     | '/profil'
     | '/status'
     | '/survei'
+    | '/admin/konselor'
     | '/konselor/jadwal'
     | '/konselor/profil'
     | '/konselor/sesi'
@@ -163,6 +173,7 @@ export interface FileRouteTypes {
     | '/profil'
     | '/status'
     | '/survei'
+    | '/admin/konselor'
     | '/konselor/jadwal'
     | '/konselor/profil'
     | '/konselor/sesi'
@@ -178,6 +189,7 @@ export interface FileRouteTypes {
     | '/profil'
     | '/status'
     | '/survei'
+    | '/admin_/konselor'
     | '/konselor_/jadwal'
     | '/konselor_/profil'
     | '/konselor_/sesi'
@@ -194,6 +206,7 @@ export interface RootRouteChildren {
   ProfilRoute: typeof ProfilRoute
   StatusRoute: typeof StatusRoute
   SurveiRoute: typeof SurveiRoute
+  AdminKonselorRoute: typeof AdminKonselorRoute
   KonselorJadwalRoute: typeof KonselorJadwalRoute
   KonselorProfilRoute: typeof KonselorProfilRoute
   KonselorSesiRoute: typeof KonselorSesiRoute
@@ -271,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SurveiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin_/konselor': {
+      id: '/admin_/konselor'
+      path: '/admin/konselor'
+      fullPath: '/admin/konselor'
+      preLoaderRoute: typeof AdminKonselorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/konselor_/jadwal': {
       id: '/konselor_/jadwal'
       path: '/konselor/jadwal'
@@ -306,6 +326,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfilRoute: ProfilRoute,
   StatusRoute: StatusRoute,
   SurveiRoute: SurveiRoute,
+  AdminKonselorRoute: AdminKonselorRoute,
   KonselorJadwalRoute: KonselorJadwalRoute,
   KonselorProfilRoute: KonselorProfilRoute,
   KonselorSesiRoute: KonselorSesiRoute,

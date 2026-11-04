@@ -9,3 +9,7 @@
 - [x] Build counselor session list and session workspace following the PRD.
 - [x] Verify timer, session notes, photo documentation and completion interactions.
 - [x] Build counselor profile page (data diri, keamanan akun, keluar) and enable Profil nav item.
+
+# Admin portal
+- [ ] Build Dashboard Konselor following the latest PRD and enable its admin menu.
+- [ ] Verify counselor dashboard filters, details and desktop/mobile layout.
