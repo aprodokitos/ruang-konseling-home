@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { CheckCircle2, ChevronRight, ClipboardList, Eye, Search, UserCheck, Users } from "lucide-react";
+import { CheckCircle2, ClipboardList, Eye, Search, UserCheck, Users } from "lucide-react";
 import { Shell } from "@/components/Shell";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -27,6 +27,14 @@ function Rate({ count, total, tone = "bg-primary" }: { count: number; total: num
   </div>;
 }
 
+function Legend({ items }: { items: { label: string; tone: string }[] }) {
+  return <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-muted-foreground">{items.map((item) => <span key={item.label} className="flex items-center gap-1.5"><span className={`size-2 rounded-sm ${item.tone}`} />{item.label}</span>)}</div>;
+}
+
+function StackedBar({ segments, total, label }: { segments: { count: number; tone: string; label: string }[]; total: number; label: string }) {
+  return <div role="img" aria-label={`${label}: ${segments.map((s) => `${s.label} ${s.count}`).join(", ")}`} className="mt-3 flex h-3 overflow-hidden rounded-full bg-muted">{segments.map((s) => <div key={s.label} title={`${s.label}: ${s.count} (${percentage(s.count, total)}%)`} className={`h-full ${s.tone}`} style={{ width: `${total === 0 ? 0 : s.count / total * 100}%` }} />)}</div>;
+}
+
 function AdminCounselors() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("Semua");
@@ -51,6 +59,7 @@ function AdminCounselors() {
           <h1 className="text-3xl font-semibold">Dashboard Analitik Konselor</h1>
           <span className="rounded-md border bg-card px-3 py-1.5 text-xs text-muted-foreground">2026</span>
         </div>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">Rekap layanan, penyelesaian kasus, dan penerimaan pengajuan konseling per konselor.</p>
 
         <h2 className="mt-10 text-lg font-semibold">Rekapitulasi Konselor</h2>
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -61,50 +70,49 @@ function AdminCounselors() {
           </div>)}
         </div>
 
-        <section className="mt-10" aria-labelledby="counselor-table-heading">
+        <section className="mt-8" aria-label="Filter Konselor">
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <div><h2 id="counselor-table-heading" className="text-lg font-semibold">Data Konselor</h2><p className="mt-1 text-xs text-muted-foreground">{rows.length} dari {adminCounselors.length} konselor</p></div>
+            <p className="text-xs text-muted-foreground">{rows.length} dari {adminCounselors.length} konselor · Rekap 2026</p>
             <div className="flex w-full flex-wrap gap-2 sm:w-auto">
               <label className="relative min-w-0 flex-1 sm:w-64"><span className="sr-only">Cari konselor</span><Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Cari nama atau keahlian…" className="h-10 w-full rounded-md border bg-card pl-9 pr-3 text-sm" /></label>
               <select aria-label="Kategori konselor" value={category} onChange={(e) => setCategory(e.target.value)} className="h-10 max-w-full rounded-md border bg-card px-3 text-sm"><option value="Semua">Semua Kategori</option><option>Dosen Program Studi</option><option>Psikolog Ahli</option></select>
             </div>
           </div>
-          <div className="mt-4 overflow-x-auto rounded-lg border bg-card">
-            <table className="w-full min-w-[1120px] text-sm">
-              <thead className="bg-muted/60 text-left text-xs text-muted-foreground"><tr>{["Konselor", "Total Pengajuan", "Pending", "Berlangsung", "Selesai", "Diterima", "Ditolak", "Dibatalkan¹", "Detail"].map((heading) => <th key={heading} scope="col" className="px-4 py-4 font-medium">{heading}</th>)}</tr></thead>
-              <tbody>{rows.map((c) => {
-                const metrics = counselorMetrics(c);
-                return <tr key={c.id} className="border-t transition-colors hover:bg-muted/30">
-                  <td className="px-4 py-5"><p className="whitespace-nowrap font-semibold">{c.name}</p><p className="mt-1 text-xs text-muted-foreground">{c.category}</p></td>
-                  <td className="px-4 py-5 font-semibold tabular-nums">{metrics.total}</td>
-                  <td className="px-4 py-5"><Rate count={c.pending} total={metrics.total} tone="bg-warning" /></td>
-                  <td className="px-4 py-5"><Rate count={c.ongoing} total={metrics.total} tone="bg-success" /></td>
-                  <td className="px-4 py-5"><Rate count={c.completed} total={metrics.total} /></td>
-                  <td className="px-4 py-5"><Rate count={metrics.accepted} total={metrics.decided} /></td>
-                  <td className="px-4 py-5"><Rate count={c.rejected} total={metrics.decided} tone="bg-destructive" /></td>
-                  <td className="px-4 py-5"><Rate count={c.cancelled} total={metrics.accepted} tone="bg-destructive/60" /></td>
-                  <td className="px-4 py-5"><Button variant="ghost" size="icon" aria-label={`Lihat detail ${c.name}`} title={`Lihat detail ${c.name}`} onClick={() => setSelected(c)}><Eye /></Button></td>
-                </tr>;
-              })}{rows.length === 0 && <tr><td colSpan={9} className="px-4 py-12 text-center"><p className="font-medium">Tidak Ada Konselor yang Cocok</p><Button variant="link" onClick={() => { setQuery(""); setCategory("Semua"); }}>Reset Filter</Button></td></tr>}</tbody>
-            </table>
-          </div>
-          <div className="mt-4 space-y-1.5 text-xs leading-relaxed text-muted-foreground">
-            <p>Pending, Berlangsung, dan Selesai: persentase dari total pengajuan masing-masing konselor.</p>
-            <p>Diterima dan Ditolak: persentase dari pengajuan yang sudah diputuskan, tidak termasuk Pending.</p>
-            <p>¹ Dibatalkan setelah diterima: persentase dari seluruh pengajuan yang pernah diterima konselor.</p>
-          </div>
         </section>
 
-        <section className="mt-10 border-t pt-6" aria-labelledby="summary-heading">
-          <h2 id="summary-heading" className="text-lg font-semibold">Ringkasan Layanan per Konselor</h2>
-          <div className="mt-4 grid gap-x-8 gap-y-5 md:grid-cols-2">
-            {rows.map((c) => <div key={c.id} className="border-b pb-4">
-              <div className="flex items-center justify-between gap-3"><div><p className="text-sm font-semibold">{c.name}</p><p className="mt-1 text-xs text-muted-foreground">{c.category}</p></div><Button variant="ghost" size="icon" aria-label={`Ringkasan ${c.name}`} title="Lihat ringkasan" onClick={() => setSelected(c)}><ChevronRight /></Button></div>
-              <div className="mt-3 flex items-center justify-between text-sm"><span className="text-muted-foreground">Sesi Selesai</span><span className="font-semibold">{c.completed} sesi</span></div>
-              <div className="mt-2"><Rate count={c.completed} total={counselorMetrics(c).total} /></div>
-            </div>)}
-          </div>
-        </section>
+        {rows.length === 0 && <div className="py-12 text-center"><p className="font-medium">Tidak Ada Konselor yang Cocok</p><Button variant="link" onClick={() => { setQuery(""); setCategory("Semua"); }}>Reset Filter</Button></div>}
+
+        <div className="mt-6 grid items-start gap-8 xl:grid-cols-[1.2fr_1fr]">
+          <section className="min-w-0 border-t pt-6" aria-labelledby="completion-heading">
+            <h2 id="completion-heading" className="text-lg font-semibold">Penyelesaian Kasus Setiap Konselor</h2>
+            <p className="mt-2 text-xs text-muted-foreground">Status dari seluruh pengajuan konseling</p>
+            <div className="mt-4"><Legend items={[{ label: "Selesai", tone: "bg-primary" }, { label: "Berlangsung", tone: "bg-chart-ongoing" }, { label: "Pending", tone: "bg-warning" }, { label: "Status Lain", tone: "bg-border" }]} /></div>
+            <div className="mt-5 divide-y">{rows.map((c) => {
+              const m = counselorMetrics(c);
+              return <div key={c.id} className="py-5 first:pt-0">
+                <div className="flex items-start justify-between gap-3"><div className="min-w-0"><p className="text-sm font-semibold">{c.name}</p><p className="mt-1 text-xs text-muted-foreground">{c.category}</p></div><Button variant="ghost" size="icon" className="shrink-0" aria-label={`Lihat detail ${c.name}`} title="Lihat detail konselor" onClick={() => setSelected(c)}><Eye className="size-4" /></Button></div>
+                <StackedBar total={m.total} label={`Penyelesaian ${c.name}`} segments={[{ label: "Selesai", count: c.completed, tone: "bg-primary" }, { label: "Berlangsung", count: c.ongoing, tone: "bg-chart-ongoing" }, { label: "Pending", count: c.pending, tone: "bg-warning" }, { label: "Status Lain", count: c.acceptedWaiting + c.cancelled + c.rejected, tone: "bg-border" }]} />
+                <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground"><span className="font-medium text-primary">{percentage(c.completed, m.total)}% Selesai</span><span>{percentage(c.ongoing, m.total)}% Berlangsung</span><span>{percentage(c.pending, m.total)}% Pending</span></div>
+                <p className="mt-2 text-xs text-muted-foreground">{c.completed} sesi selesai · {m.total} pengajuan</p>
+              </div>;
+            })}</div>
+          </section>
+
+          <section className="min-w-0 border-t pt-6" aria-labelledby="acceptance-heading">
+            <h2 id="acceptance-heading" className="text-lg font-semibold">Rasio Penerimaan Konseling</h2>
+            <p className="mt-2 text-xs text-muted-foreground">Pengajuan yang telah diterima atau ditolak</p>
+            <div className="mt-4"><Legend items={[{ label: "Diterima", tone: "bg-primary" }, { label: "Ditolak", tone: "bg-destructive" }]} /></div>
+            <div className="mt-5 divide-y">{rows.map((c) => {
+              const m = counselorMetrics(c);
+              return <div key={c.id} className="py-5 first:pt-0">
+                <p className="text-sm font-semibold">{c.name}</p>
+                <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs"><span className="text-primary">{percentage(m.accepted, m.decided)}% Diterima ({m.accepted})</span><span className="text-destructive">{percentage(c.rejected, m.decided)}% Ditolak ({c.rejected})</span></div>
+                <StackedBar total={m.decided} label={`Penerimaan ${c.name}`} segments={[{ label: "Diterima", count: m.accepted, tone: "bg-primary" }, { label: "Ditolak", count: c.rejected, tone: "bg-destructive" }]} />
+              </div>;
+            })}</div>
+            <div className="mt-1 border-t pt-4"><p className="text-sm text-muted-foreground">Rasio penerimaan keseluruhan <span className="font-semibold text-primary">{percentage(totals.accepted, totals.decided)}%</span></p><p className="mt-1 text-xs text-muted-foreground">{totals.accepted} diterima dari {totals.decided} pengajuan yang telah diputuskan</p></div>
+          </section>
+        </div>
       </section>
     </Shell>
 
