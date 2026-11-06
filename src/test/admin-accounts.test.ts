@@ -1,5 +1,23 @@
 import { describe, expect, it } from "vitest";
-import { changeRole, sampleAccounts, sampleRequests, removeAccount, validateNewUser } from "@/lib/admin-accounts";
+import { activeAdminCount, adminProfile, changeRole, sampleAccounts, sampleRequests, removeAccount, validateNewUser, MAX_ACTIVE_ADMINS } from "@/lib/admin-accounts";
+
+describe("Profil admin", () => {
+  it("fills the admin profile from the account table", () => {
+    const profile = adminProfile(sampleAccounts);
+    expect(profile.name).toBe("dr. Erna Harfiani");
+    expect(profile.email).toBe("erna@upnvj.ac.id");
+    expect(profile.role).toBe("Admin");
+    expect(profile.status).toBe("Aktif");
+  });
+  it("counts active admin seats against the limit of two", () => {
+    expect(activeAdminCount(sampleAccounts)).toBe(MAX_ACTIVE_ADMINS);
+    expect(activeAdminCount(removeAccount(sampleAccounts, "u2"))).toBe(1);
+  });
+  it("refuses to open a profile for a non-admin account", () => {
+    expect(() => adminProfile(sampleAccounts, "u3")).toThrow(/Admin/);
+    expect(() => adminProfile(sampleAccounts, "nope")).toThrow(/tidak ditemukan/);
+  });
+});
 
 describe("Kelola akun & role", () => {
   it("rejects a third active admin", () => {
