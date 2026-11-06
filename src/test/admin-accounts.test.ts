@@ -8,7 +8,7 @@ describe("Kelola akun & role", () => {
   });
   it("rejects duplicate emails and pending-request emails", () => {
     expect(validateNewUser(sampleAccounts, [], { name: "X", email: "ERNA@upnvj.ac.id", role: "Konselor" })).toMatch(/sudah dimiliki/);
-    expect(validateNewUser(sampleAccounts, sampleRequests, { name: "X", email: sampleRequests[0].email, role: "Mahasiswa" })).toMatch(/pengajuan/);
+    expect(validateNewUser(sampleAccounts, sampleRequests, { name: "X", email: sampleRequests[0]!.email, role: "Mahasiswa" })).toMatch(/pengajuan/);
   });
   it("requires all fields", () => {
     expect(validateNewUser(sampleAccounts, [], { name: "", email: "a@b.id", role: "Mahasiswa" })).not.toBeNull();
