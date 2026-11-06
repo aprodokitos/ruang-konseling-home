@@ -5,5 +5,5 @@ export const adminNavigation: NavItem[] = [
   { label: "Dashboard Mahasiswa", to: "/admin", icon: BarChart3 },
   { label: "Dashboard Konselor", to: "/admin/konselor", icon: Users },
   { label: "Kelola Akun & Role", to: "/admin/akun", icon: UserCog },
-  { label: "Profil", icon: User },
+  { label: "Profil", to: "/admin/profil", icon: User },
 ];
