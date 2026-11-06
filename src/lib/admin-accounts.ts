@@ -21,7 +21,22 @@ export const sampleRequests: AccountRequest[] = [
 ];
 
 const activeAdmins = (list: Account[]) => list.filter((a) => a.role === "Admin" && a.status === "Aktif").length;
+export const activeAdminCount = activeAdmins;
 const normalize = (email: string) => email.trim().toLowerCase();
+
+export type AdminProfile = Account & { position: string; phone: string; joined: string };
+
+const adminExtras: Record<string, { position: string; phone: string; joined: string }> = {
+  u1: { position: "Wakil Dekan 3", phone: "0812-3456-7890", joined: "12 Januari 2026" },
+  u2: { position: "Staf Fakultas yang ditunjuk", phone: "0813-9876-5432", joined: "3 Februari 2026" },
+};
+
+export function adminProfile(list: Account[], id: string = CURRENT_ADMIN_ID): AdminProfile {
+  const account = list.find((a) => a.id === id);
+  if (!account) throw new Error("Akun admin tidak ditemukan di database.");
+  if (account.role !== "Admin") throw new Error("Hanya akun Admin yang dapat membuka profil admin.");
+  return { ...account, ...(adminExtras[id] ?? { position: "Staf Fakultas", phone: "—", joined: "—" }) };
+}
 
 export function validateNewUser(list: Account[], requests: AccountRequest[], input: { name: string; email: string; role: Role | "" }): string | null {
   if (!input.name.trim() || !input.email.trim() || !input.role) return "Semua isian wajib diisi.";

@@ -14,3 +14,4 @@
 - [x] Reshape counselor analytics into recap, case completion and acceptance-ratio sections; verify charts and filters.
 - [x] Build Dashboard Konselor following the latest PRD and enable its admin menu.
 - [x] Verify counselor dashboard filters, details and desktop/mobile layout.
+- [x] Build admin profile page (read-only account data, admin seats, access log) and enable its admin menu.
