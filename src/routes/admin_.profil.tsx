@@ -1,4 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { BadgeCheck, ChevronRight, Database, History, KeyRound, LogOut, ShieldCheck, User } from "lucide-react";
 import { Shell } from "@/components/Shell";
 import { Badge } from "@/components/ui/badge";
@@ -25,7 +28,13 @@ const accessLog = [
 ];
 
 function AdminProfilePage() {
-  const profile = adminProfile(sampleAccounts);
+  const base = adminProfile(sampleAccounts);
+  const [profile, setProfile] = useState(base);
+  const [draft, setDraft] = useState(base);
+  const [editing, setEditing] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const editable: Record<string, "name" | "position" | "phone"> = { "Nama lengkap & gelar": "name", Jabatan: "position", "Nomor telepon": "phone" };
+  const canSave = draft.name.trim() !== "" && draft.position.trim() !== "" && /^[0-9+ -]{8,}$/.test(draft.phone.trim());
   const seats = activeAdminCount(sampleAccounts);
   const initials = profile.name.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase();
 
@@ -52,7 +61,7 @@ function AdminProfilePage() {
         <section className="mx-auto max-w-3xl px-5 py-8 lg:px-9">
           <p className="text-xs font-semibold uppercase tracking-widest text-primary">Akun Admin</p>
           <h1 className="mt-2 text-3xl font-semibold">Profil</h1>
-          <p className="mt-3 max-w-lg text-sm text-muted-foreground">Data admin terisi otomatis dari database. Kamu tidak mengubahnya sendiri — nama, email, role, dan status akun dikelola Admin lainnya lewat Kelola Akun &amp; Role.</p>
+          <p className="mt-3 max-w-lg text-sm text-muted-foreground">Kamu bisa mengubah nama, jabatan, dan nomor telepon. Email kampus dan role dikunci karena dipakai untuk login Google dan diatur lewat Kelola Akun &amp; Role.</p>
 
           <div className="mt-8 rounded-3xl border bg-card p-6 md:p-8">
             <div className="flex flex-wrap items-center justify-between gap-4">
@@ -66,17 +75,30 @@ function AdminProfilePage() {
                   </div>
                 </div>
               </div>
-              <span className="rounded-full border bg-muted px-4 py-2 text-xs font-medium text-muted-foreground">Hanya baca</span>
+              {editing ? (
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={() => { setDraft(profile); setEditing(false); }}>Batal</Button>
+                  <Button disabled={!canSave} onClick={() => { setProfile({ ...draft, name: draft.name.trim(), position: draft.position.trim(), phone: draft.phone.trim() }); setEditing(false); setSaved(true); }}>Simpan</Button>
+                </div>
+              ) : (
+                <Button variant="outline" onClick={() => { setDraft(profile); setEditing(true); setSaved(false); }}>Ubah data</Button>
+              )}
             </div>
 
             <dl className="mt-8 grid gap-3 sm:grid-cols-2">
               {fields.map((f) => (
                 <div key={f.label} className={f.wide ? "rounded-xl bg-muted px-4 py-3 sm:col-span-2" : "rounded-xl bg-muted px-4 py-3"}>
                   <dt className="text-xs text-muted-foreground">{f.label}</dt>
-                  <dd className="mt-0.5 font-medium">{f.value}</dd>
+                  {editing && editable[f.label] ? (
+                    <Input aria-label={f.label} className="mt-1 bg-card" value={draft[editable[f.label]!]} onChange={(e) => setDraft({ ...draft, [editable[f.label]!]: e.target.value })} />
+                  ) : (
+                    <dd className="mt-0.5 font-medium">{f.value}{editing && <span className="ml-2 text-xs font-normal text-muted-foreground">(dikunci)</span>}</dd>
+                  )}
                 </div>
               ))}
             </dl>
+            {editing && !canSave && <p className="mt-3 text-xs text-destructive">Nama dan jabatan wajib diisi, nomor telepon minimal 8 angka.</p>}
+            {saved && <p className="mt-3 text-sm text-primary">Perubahan profil tersimpan (contoh tampilan, belum tersimpan permanen).</p>}
 
             <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-primary/25 bg-secondary/50 px-4 py-3">
               <p className="flex items-center gap-2 text-sm font-medium text-secondary-foreground"><Database className="size-4 shrink-0" /> Admin aktif {seats} dari {MAX_ACTIVE_ADMINS} orang</p>
