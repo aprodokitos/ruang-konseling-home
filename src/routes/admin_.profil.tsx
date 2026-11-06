@@ -35,7 +35,6 @@ function AdminProfilePage() {
     { label: "Email kampus (login Google)", value: profile.email, wide: true },
     { label: "Nomor telepon", value: profile.phone },
     { label: "Role", value: profile.role },
-    { label: "Status akun", value: profile.status },
     { label: "Cara akun dibuat", value: profile.source === "Developer" ? "Dimasukkan developer (Admin pertama)" : profile.source },
     { label: "Bergabung sejak", value: profile.joined },
   ];
