@@ -106,7 +106,7 @@ function AdminStudents() {
           <h1 className="mt-2 text-3xl font-semibold">Dashboard Analitik Mahasiswa</h1>
           <p className="mt-3 max-w-2xl text-sm text-muted-foreground">Rekap pengajuan, distribusi data, dan hasil survei kepuasan. Identitas lengkap hanya tampil di dashboard ini — rekapitulasi yang dibagikan tetap tersamarkan.</p>
 
-          <h2 className="mt-10 text-lg font-semibold">Rekapitulasi pengajuan</h2>
+          <h2 className="mt-10 text-lg font-semibold">Rekapitulasi Pengajuan</h2>
           <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
             {stats.map(([l, v]) => (
               <div key={l} className="rounded-2xl border bg-card p-5">
@@ -116,7 +116,7 @@ function AdminStudents() {
             ))}
           </div>
 
-          <h2 className="mt-10 text-lg font-semibold">Distribusi data mahasiswa</h2>
+          <h2 className="mt-10 text-lg font-semibold">Distribusi Data Mahasiswa</h2>
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             <Card title="Berdasarkan kategori masalah"><Bars data={byCategory} /></Card>
             <Card title="Berdasarkan program studi"><Bars data={byProdi} /></Card>
@@ -161,7 +161,7 @@ function AdminStudents() {
             </table>
           </div>
 
-          <h2 className="mt-10 text-lg font-semibold">Analitik survei kepuasan</h2>
+          <h2 className="mt-10 text-lg font-semibold">Analitik Survei Kepuasan</h2>
           <div className="mt-4 grid gap-4 md:grid-cols-3">
             <Card title="Tingkat pengisian">
               <p className="text-4xl font-semibold">62<span className="text-lg text-muted-foreground"> / 77</span></p>

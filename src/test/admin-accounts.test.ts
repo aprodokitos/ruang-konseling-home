@@ -9,8 +9,9 @@ describe("Profil admin", () => {
     expect(profile.role).toBe("Admin");
     expect(profile.status).toBe("Aktif");
   });
-  it("counts active admin seats against the limit of two", () => {
-    expect(activeAdminCount(sampleAccounts)).toBe(MAX_ACTIVE_ADMINS);
+  it("allows up to five active admins", () => {
+    expect(MAX_ACTIVE_ADMINS).toBe(5);
+    expect(activeAdminCount(sampleAccounts)).toBe(2);
     expect(activeAdminCount(removeAccount(sampleAccounts, "u2"))).toBe(1);
   });
   it("refuses to open a profile for a non-admin account", () => {
@@ -20,9 +21,11 @@ describe("Profil admin", () => {
 });
 
 describe("Kelola akun & role", () => {
-  it("rejects a third active admin", () => {
-    expect(validateNewUser(sampleAccounts, [], { name: "X", email: "x@upnvj.ac.id", role: "Admin" })).toMatch(/2 orang/);
-    expect(() => changeRole(sampleAccounts, "u3", "Admin")).toThrow();
+  it("allows a third admin but rejects a sixth", () => {
+    expect(validateNewUser(sampleAccounts, [], { name: "X", email: "x@upnvj.ac.id", role: "Admin" })).toBeNull();
+    const five = [3, 4, 5].reduce((l, n) => [...l, { ...l[0]!, id: `a${n}`, email: `a${n}@upnvj.ac.id` }], sampleAccounts);
+    expect(validateNewUser(five, [], { name: "X", email: "x@upnvj.ac.id", role: "Admin" })).toMatch(/5 orang/);
+    expect(() => changeRole(five, "u3", "Admin")).toThrow();
   });
   it("rejects duplicate emails and pending-request emails", () => {
     expect(validateNewUser(sampleAccounts, [], { name: "X", email: "ERNA@upnvj.ac.id", role: "Konselor" })).toMatch(/sudah dimiliki/);

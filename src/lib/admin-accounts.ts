@@ -3,7 +3,7 @@ export type AccountStatus = "Aktif" | "Nonaktif";
 export type Account = { id: string; name: string; email: string; role: Role; status: AccountStatus; source: "Developer" | "Ditambahkan Admin" | "Pengajuan Akun" };
 export type AccountRequest = { id: string; name: string; email: string; role: "Mahasiswa" | "Konselor"; detail: string; submitted: string };
 
-export const MAX_ACTIVE_ADMINS = 2;
+export const MAX_ACTIVE_ADMINS = 5;
 export const CURRENT_ADMIN_ID = "u1";
 
 export const sampleAccounts: Account[] = [
