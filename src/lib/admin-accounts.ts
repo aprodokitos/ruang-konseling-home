@@ -11,8 +11,7 @@ export const sampleAccounts: Account[] = [
   { id: "u2", name: "Dimas Prasetyo, S.Kom.", email: "dimas.staf@upnvj.ac.id", role: "Admin", status: "Aktif", source: "Ditambahkan Admin" },
   { id: "u3", name: "dr. Ratna Wulandari, M.Pd.Ked.", email: "ratna@upnvj.ac.id", role: "Konselor", status: "Aktif", source: "Pengajuan Akun" },
   { id: "u4", name: "Sari Anggraini, M.Psi., Psikolog", email: "sari.psikolog@gmail.com", role: "Konselor", status: "Aktif", source: "Ditambahkan Admin" },
-  { id: "u5", name: "dr. Hendra Kusuma", email: "hendra@upnvj.ac.id", role: "Konselor", status: "Nonaktif", source: "Pengajuan Akun" },
-  { id: "u6", name: "Alya Rahmadani", email: "2310211045@mahasiswa.upnvj.ac.id", role: "Mahasiswa", status: "Aktif", source: "Pengajuan Akun" },
+    { id: "u6", name: "Alya Rahmadani", email: "2310211045@mahasiswa.upnvj.ac.id", role: "Mahasiswa", status: "Aktif", source: "Pengajuan Akun" },
   { id: "u7", name: "Rizky Maulana", email: "2210212018@mahasiswa.upnvj.ac.id", role: "Mahasiswa", status: "Aktif", source: "Ditambahkan Admin" },
 ];
 
@@ -40,9 +39,7 @@ export function changeRole(list: Account[], id: string, role: Role, actorId = CU
   return list.map((a) => (a.id === id ? { ...a, role } : a));
 }
 
-export function toggleStatus(list: Account[], id: string, actorId = CURRENT_ADMIN_ID): Account[] {
-  if (id === actorId) throw new Error("Admin tidak dapat menonaktifkan dirinya sendiri.");
-  const target = list.find((a) => a.id === id);
-  if (target && target.role === "Admin" && target.status === "Nonaktif" && activeAdmins(list) >= MAX_ACTIVE_ADMINS) throw new Error(`Admin aktif sudah ${MAX_ACTIVE_ADMINS} orang.`);
-  return list.map((a) => (a.id === id ? { ...a, status: a.status === "Aktif" ? "Nonaktif" : "Aktif" } : a));
+export function removeAccount(list: Account[], id: string, actorId = CURRENT_ADMIN_ID): Account[] {
+  if (id === actorId) throw new Error("Admin tidak dapat menghapus akunnya sendiri.");
+  return list.filter((a) => a.id !== id);
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { changeRole, sampleAccounts, sampleRequests, toggleStatus, validateNewUser } from "@/lib/admin-accounts";
+import { changeRole, sampleAccounts, sampleRequests, removeAccount, validateNewUser } from "@/lib/admin-accounts";
 
 describe("Kelola akun & role", () => {
   it("rejects a third active admin", () => {
@@ -14,9 +14,9 @@ describe("Kelola akun & role", () => {
     expect(validateNewUser(sampleAccounts, [], { name: "", email: "a@b.id", role: "Mahasiswa" })).not.toBeNull();
     expect(validateNewUser(sampleAccounts, [], { name: "A", email: "a@b.id", role: "Mahasiswa" })).toBeNull();
   });
-  it("blocks admins from changing or deactivating themselves", () => {
+  it("blocks admins from changing or deleting themselves", () => {
     expect(() => changeRole(sampleAccounts, "u1", "Konselor")).toThrow();
-    expect(() => toggleStatus(sampleAccounts, "u1")).toThrow();
-    expect(toggleStatus(sampleAccounts, "u3").find((a) => a.id === "u3")?.status).toBe("Nonaktif");
+    expect(() => removeAccount(sampleAccounts, "u1")).toThrow();
+    expect(removeAccount(sampleAccounts, "u3").some((a) => a.id === "u3")).toBe(false);
   });
 });
